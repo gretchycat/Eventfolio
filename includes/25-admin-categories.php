@@ -19,7 +19,6 @@ if (!function_exists('ef_category_header_row')) {
 
 function ef_admin_categories_page()
 {
-    check_admin_referer('ef_category_form');
     // --- Handle POST (add/edit) ---
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cat_action']) && check_admin_referer('ef_category_form'))
     {
