@@ -178,3 +178,48 @@ function ef_update_user_permissions($user_id, $permissions_csv)
         'updated_at' => current_time('mysql')
     ]);
 }
+
+function ef_insert_category($slug, $name, $visibility, $description)
+{
+    global $wpdb;
+    $table = $wpdb->prefix . 'ef_categories';
+    return $wpdb->insert($table, [
+        'slug' => $slug,
+        'name' => $name,
+        'visibility' => $visibility,
+        'description' => $description
+    ]);
+}
+
+function ef_update_category($id, $name, $visibility, $description)
+{
+    global $wpdb;
+    $table = $wpdb->prefix . 'ef_categories';
+    return $wpdb->update($table, [
+        'name' => $name,
+        'visibility' => $visibility,
+        'description' => $description
+    ], ['id' => $id]);
+}
+
+function ef_delete_category($id)
+{
+    global $wpdb;
+    $table = $wpdb->prefix . 'ef_categories';
+    return $wpdb->delete($table, ['id' => $id]);
+}
+
+function ef_category_slug_exists($slug)
+{
+    global $wpdb;
+    $table = $wpdb->prefix . 'ef_categories';
+    return $wpdb->get_var($wpdb->prepare("SELECT id FROM $table WHERE slug = %s", $slug));
+}
+
+function ef_get_categories()
+{
+    global $wpdb;
+    $table = $wpdb->prefix . 'ef_categories';
+    return $wpdb->get_results("SELECT * FROM $table ORDER BY name ASC");
+}
+
