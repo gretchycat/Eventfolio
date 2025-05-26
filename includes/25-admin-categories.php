@@ -1,10 +1,6 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-require_once EF_PLUGIN_PATH . 'includes/db.php';
-require_once EF_PLUGIN_PATH . 'includes/20-category-viewer.php';
-require_once EF_PLUGIN_PATH . 'includes/21-category-editor.php';
-
 // --- Helper: Category header row ---
 if (!function_exists('ef_category_header_row')) {
     function ef_category_header_row()
@@ -79,14 +75,17 @@ function ef_admin_categories_page()
     ef_category_header_row();
     foreach ($categories as $cat)
     {
-        if ($editing_id == $cat->id) {
+        if ($editing_id == $cat->id) 
+        {
             ef_category_editor_row($cat, 'edit');
-        } else {
+        } else 
+        {
             ef_category_viewer_row($cat);
         }
     }
     // Only show add row if adding_new and not currently editing
-    if ($adding_new) {
+    if ($adding_new) 
+    {
         ef_category_editor_row((object)[
             'id'=>0, 'slug'=>'', 'name'=>'', 'visibility'=>'public', 'description'=>''
         ], 'add');
