@@ -35,14 +35,14 @@ function ef_admin_categories_page()
                 ef_insert_category($slug, $name, $visibility, $description);
             }
             // Redirect to main page to clear &add=1
-            wp_redirect(admin_url('admin.php?page=eventfolio_categories'));
-            exit;
+            //wp_redirect(admin_url('admin.php?page=eventfolio_categories'));
+            //exit;
         }
         elseif ($_POST['cat_action'] === 'save' && $id)
         {
             ef_update_category($id, $name, $visibility, $description);
-            wp_redirect(admin_url('admin.php?page=eventfolio_categories'));
-            exit;
+            //wp_redirect(admin_url('admin.php?page=eventfolio_categories'));
+            //exit;
         }
     }
     // --- Handle delete ---
@@ -52,8 +52,8 @@ function ef_admin_categories_page()
         if ($delete_id)
         {
             ef_delete_category($delete_id);
-            wp_redirect(admin_url('admin.php?page=eventfolio_categories'));
-            exit;
+            //wp_redirect(admin_url('admin.php?page=eventfolio_categories'));
+            //exit;
         }
     }
 
