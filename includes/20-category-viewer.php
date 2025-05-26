@@ -17,4 +17,3 @@ if (!function_exists('ef_category_viewer_row')) {
         <?php
     }
 }
-?>

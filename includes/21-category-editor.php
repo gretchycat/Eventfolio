@@ -34,4 +34,3 @@ if (!function_exists('ef_category_editor_row')) {
         <?php
     }
 }
-?>
