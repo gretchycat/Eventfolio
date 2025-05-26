@@ -1,6 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
+if(false){
 ef_admin_nav();
 
 echo '<div class="ef-category-list">';
@@ -40,7 +41,7 @@ function ef_admin_categories_page()
 {
     global $wpdb;
     $table = $wpdb->prefix . 'ef_categories';
-
+}
     // Handle add/edit/delete actions
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cat_action']))
     {
