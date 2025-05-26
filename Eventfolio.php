@@ -47,12 +47,5 @@ register_activation_hook(__FILE__, 'ef_install_tables');
 add_action('admin_menu', function()
 {
     add_menu_page('Eventfolio', 'Eventfolio', 'manage_options', 'eventfolio', 'ef_admin_info_page');
-    // Add other submenu pages here as you build them
-});
-
-add_action('admin_menu', function()
-{
-    add_menu_page('Eventfolio', 'Eventfolio', 'manage_options', 'eventfolio', 'ef_admin_info_page');
     add_submenu_page('eventfolio', 'Categories', 'Categories', 'manage_options', 'eventfolio_categories', 'ef_admin_categories_page');
-    // ...other submenus as needed
 });
