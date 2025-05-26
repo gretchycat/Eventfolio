@@ -36,7 +36,7 @@ $mode = 'add';
 include EF_PLUGIN_PATH . 'includes/category-editor.php';
 
 echo '</div>';
-
+}
 function ef_admin_categories_page()
 {
     global $wpdb;
