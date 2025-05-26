@@ -1,42 +1,6 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-if(false){
-ef_admin_nav();
-
-echo '<div class="ef-category-list">';
-echo '<div class="ef-category-row ef-category-header">';
-echo '<div class="ef-category-col">Slug</div>';
-echo '<div class="ef-category-col">Name</div>';
-echo '<div class="ef-category-col">Visibility</div>';
-echo '<div class="ef-category-col">Description</div>';
-echo '<div class="ef-category-col ef-category-actions">Actions</div>';
-echo '</div>';
-
-// Fetch categories (you'll replace this with DB logic)
-$categories = isset($categories) ? $categories : []; // fallback if $categories not passed
-$editing_id = isset($editing_id) ? $editing_id : 0; // set to editing category id
-
-foreach ($categories as $cat)
-{
-    if ($editing_id == $cat->id)
-    {
-        $mode = 'edit';
-        include EF_PLUGIN_PATH . 'includes/category-editor.php';
-    }
-    else
-    {
-        include EF_PLUGIN_PATH . 'includes/category-viewer.php';
-    }
-}
-
-// Add new category row (blank)
-$cat = (object) ['id'=>0, 'slug'=>'', 'name'=>'', 'visibility'=>'public', 'description'=>''];
-$mode = 'add';
-include EF_PLUGIN_PATH . 'includes/category-editor.php';
-
-echo '</div>';
-}
 function ef_admin_categories_page()
 {
     global $wpdb;
