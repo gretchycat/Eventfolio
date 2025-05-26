@@ -23,7 +23,7 @@ if (!defined('EF_PLUGIN_URL'))
 
 // Load all PHP files in the includes directory in sorted order
 $files = glob(EF_PLUGIN_PATH . 'includes/*.php');
-if (false and $files)
+if ($files)
 {
     sort($files, SORT_STRING | SORT_FLAG_CASE); // Ensure alphabetical, case-insensitive
     foreach ($files as $file)
@@ -31,10 +31,6 @@ if (false and $files)
         require_once $file;
     }
 }
-
-require_once EF_PLUGIN_PATH . 'includes/00-init.php';
-require_once EF_PLUGIN_PATH . 'includes/05-db.php';
-require_once EF_PLUGIN_PATH . 'includes/10-admin-info.php';
 
 // Add a Settings link on the Plugins page
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links) {
