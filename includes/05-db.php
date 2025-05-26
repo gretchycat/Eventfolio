@@ -1,24 +1,25 @@
 <?php
 
-// Ensure this file is not accessed directly.
 if (!defined('ABSPATH')) exit;
 
-global $wpdb;
-
-// Table names
-$ef_events           = $wpdb->prefix . 'ef_events';
-$ef_categories       = $wpdb->prefix . 'ef_categories';
-$ef_event_categories = $wpdb->prefix . 'ef_event_categories';
-$ef_signups          = $wpdb->prefix . 'ef_signups';
-$ef_user_permissions = $wpdb->prefix . 'ef_user_permissions';
+// --- Table name constants (set only once) ---
+if (!defined('EF_EVENTS_TABLE')) {
+    global $wpdb;
+    define('EF_EVENTS_TABLE',           $wpdb->prefix . 'eventfolio_events');
+    define('EF_CATEGORIES_TABLE',       $wpdb->prefix . 'eventfolio_categories');
+    define('EF_EVENT_CATEGORIES_TABLE', $wpdb->prefix . 'eventfolio_event_categories');
+    define('EF_SIGNUPS_TABLE',          $wpdb->prefix . 'eventfolio_signups');
+    define('EF_USER_PERMISSIONS_TABLE', $wpdb->prefix . 'eventfolio_user_permissions');
+}
 
 // --- Table creation functions ---
 
 function ef_create_events_table()
 {
-    global $wpdb, $ef_events;
+    $table = EF_EVENTS_TABLE;
+    global $wpdb;
     $charset_collate = $wpdb->get_charset_collate();
-    $sql = "CREATE TABLE $ef_events (
+    $sql = "CREATE TABLE $table (
         id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
         title varchar(255) NOT NULL,
         description text,
@@ -38,9 +39,10 @@ function ef_create_events_table()
 
 function ef_create_categories_table()
 {
-    global $wpdb, $ef_categories;
+    $table = EF_CATEGORIES_TABLE;
+    global $wpdb;
     $charset_collate = $wpdb->get_charset_collate();
-    $sql = "CREATE TABLE $ef_categories (
+    $sql = "CREATE TABLE $table (
         id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
         slug varchar(128) NOT NULL UNIQUE,
         name varchar(128) NOT NULL,
@@ -56,9 +58,10 @@ function ef_create_categories_table()
 
 function ef_create_event_categories_table()
 {
-    global $wpdb, $ef_event_categories;
+    $table = EF_EVENT_CATEGORIES_TABLE;
+    global $wpdb;
     $charset_collate = $wpdb->get_charset_collate();
-    $sql = "CREATE TABLE $ef_event_categories (
+    $sql = "CREATE TABLE $table (
         event_id bigint(20) unsigned NOT NULL,
         category_slug varchar(128) NOT NULL,
         PRIMARY KEY (event_id, category_slug),
@@ -70,9 +73,10 @@ function ef_create_event_categories_table()
 
 function ef_create_signups_table()
 {
-    global $wpdb, $ef_signups;
+    $table = EF_SIGNUPS_TABLE;
+    global $wpdb;
     $charset_collate = $wpdb->get_charset_collate();
-    $sql = "CREATE TABLE $ef_signups (
+    $sql = "CREATE TABLE $table (
         id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
         event_id bigint(20) unsigned NOT NULL,
         user_id bigint(20) unsigned NOT NULL,
@@ -87,9 +91,10 @@ function ef_create_signups_table()
 
 function ef_create_user_permissions_table()
 {
-    global $wpdb, $ef_user_permissions;
+    $table = EF_USER_PERMISSIONS_TABLE;
+    global $wpdb;
     $charset_collate = $wpdb->get_charset_collate();
-    $sql = "CREATE TABLE $ef_user_permissions (
+    $sql = "CREATE TABLE $table (
         user_id bigint(20) unsigned NOT NULL,
         permissions text NOT NULL,
         updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -103,11 +108,12 @@ function ef_create_user_permissions_table()
 
 add_action('wp_login', function($user_login, $user)
 {
-    global $wpdb, $ef_user_permissions;
-    $exists = $wpdb->get_var($wpdb->prepare("SELECT user_id FROM $ef_user_permissions WHERE user_id = %d", $user->ID));
+    $table = EF_USER_PERMISSIONS_TABLE;
+    global $wpdb;
+    $exists = $wpdb->get_var($wpdb->prepare("SELECT user_id FROM $table WHERE user_id = %d", $user->ID));
     if (!$exists)
     {
-        $wpdb->insert($ef_user_permissions, [
+        $wpdb->insert($table, [
             'user_id' => $user->ID,
             'permissions' => 'view_event',
             'updated_at' => current_time('mysql')
@@ -117,16 +123,16 @@ add_action('wp_login', function($user_login, $user)
 
 add_action('delete_user', function($user_id)
 {
-    global $wpdb, $ef_user_permissions;
-    $wpdb->delete($ef_user_permissions, ['user_id' => $user_id]);
+    $table = EF_USER_PERMISSIONS_TABLE;
+    global $wpdb;
+    $wpdb->delete($table, ['user_id' => $user_id]);
 });
 
+// --- Ensure at least one category exists ---
 function ef_ensure_categories_exist()
 {
+    $table = EF_CATEGORIES_TABLE;
     global $wpdb;
-    $table = $wpdb->prefix . 'ef_categories';
-
-    // If the table is empty, insert the default "Events" category
     $count = $wpdb->get_var("SELECT COUNT(*) FROM $table");
     if (!$count) {
         $wpdb->insert($table, [
@@ -152,7 +158,8 @@ function ef_install_tables()
 // --- Add an event (basic version) ---
 function ef_add_event($args)
 {
-    global $wpdb, $ef_events;
+    $table = EF_EVENTS_TABLE;
+    global $wpdb;
     $defaults = [
         'title' => '',
         'description' => '',
@@ -164,25 +171,28 @@ function ef_add_event($args)
         'teaser' => ''
     ];
     $data = wp_parse_args($args, $defaults);
-    $wpdb->insert($ef_events, $data);
+    $wpdb->insert($table, $data);
     return $wpdb->insert_id;
 }
 
 // --- Update user permissions ---
 function ef_update_user_permissions($user_id, $permissions_csv)
 {
-    global $wpdb, $ef_user_permissions;
-    $wpdb->replace($ef_user_permissions, [
+    $table = EF_USER_PERMISSIONS_TABLE;
+    global $wpdb;
+    $wpdb->replace($table, [
         'user_id' => $user_id,
         'permissions' => $permissions_csv,
         'updated_at' => current_time('mysql')
     ]);
 }
 
+// --- Category utility functions ---
+
 function ef_insert_category($slug, $name, $visibility, $description)
 {
+    $table = EF_CATEGORIES_TABLE;
     global $wpdb;
-    $table = $wpdb->prefix . 'ef_categories';
     return $wpdb->insert($table, [
         'slug' => $slug,
         'name' => $name,
@@ -193,8 +203,8 @@ function ef_insert_category($slug, $name, $visibility, $description)
 
 function ef_update_category($id, $name, $visibility, $description)
 {
+    $table = EF_CATEGORIES_TABLE;
     global $wpdb;
-    $table = $wpdb->prefix . 'ef_categories';
     return $wpdb->update($table, [
         'name' => $name,
         'visibility' => $visibility,
@@ -204,22 +214,21 @@ function ef_update_category($id, $name, $visibility, $description)
 
 function ef_delete_category($id)
 {
+    $table = EF_CATEGORIES_TABLE;
     global $wpdb;
-    $table = $wpdb->prefix . 'ef_categories';
     return $wpdb->delete($table, ['id' => $id]);
 }
 
 function ef_category_slug_exists($slug)
 {
+    $table = EF_CATEGORIES_TABLE;
     global $wpdb;
-    $table = $wpdb->prefix . 'ef_categories';
     return $wpdb->get_var($wpdb->prepare("SELECT id FROM $table WHERE slug = %s", $slug));
 }
 
 function ef_get_categories()
 {
+    $table = EF_CATEGORIES_TABLE;
     global $wpdb;
-    $table = $wpdb->prefix . 'ef_categories';
     return $wpdb->get_results("SELECT * FROM $table ORDER BY name ASC");
 }
-
