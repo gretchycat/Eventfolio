@@ -121,11 +121,29 @@ add_action('delete_user', function($user_id)
     $wpdb->delete($ef_user_permissions, ['user_id' => $user_id]);
 });
 
+function ef_ensure_categories_exist()
+{
+    global $wpdb;
+    $table = $wpdb->prefix . 'ef_categories';
+
+    // If the table is empty, insert the default "Events" category
+    $count = $wpdb->get_var("SELECT COUNT(*) FROM $table");
+    if (!$count) {
+        $wpdb->insert($table, [
+            'slug' => 'events',
+            'name' => 'Events',
+            'visibility' => 'public',
+            'description' => ''
+        ]);
+    }
+}
+
 // --- Utility: install all tables ---
 function ef_install_tables()
 {
     ef_create_events_table();
     ef_create_categories_table();
+    ef_ensure_categories_exist();
     ef_create_event_categories_table();
     ef_create_signups_table();
     ef_create_user_permissions_table();
