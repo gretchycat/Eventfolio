@@ -39,3 +39,8 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links)
     return $links;
 });
 
+register_activation_hook(__FILE__, 'ef_install_tables');
+
+// require_once plugin_dir_path(__FILE__) . 'includes/admin-info.php';
+// ...in admin_menu:
+add_menu_page('Eventfolio', 'Eventfolio', 'manage_options', 'eventfolio', 'ef_admin_info_page');
