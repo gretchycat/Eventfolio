@@ -5,6 +5,7 @@ if (!function_exists('ef_category_editor_row')) {
         if (!$cat) $cat = (object) ['id'=>0, 'slug'=>'', 'name'=>'', 'visibility'=>'public', 'description'=>''];
         ?>
         <form method="post" class="ef-category-row ef-category-editor">
+        <?php wp_nonce_field('ef_category_form'); ?>
             <input type="hidden" name="cat_id" value="<?php echo intval($cat->id); ?>">
             <div class="ef-category-col">
                 <input class="ef-input" type="text" name="cat_slug" value="<?php echo esc_attr($cat->slug); ?>" <?php if ($mode === 'edit') echo 'readonly'; ?> required>
