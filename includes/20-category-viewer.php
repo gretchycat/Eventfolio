@@ -1,5 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
+if (isset($cat) && !is_object($cat)) 
+{
 ?>
 <div class="ef-category-row ef-category-viewer">
     <div class="ef-category-col"><?php echo esc_html($cat->slug); ?></div>
@@ -11,3 +13,4 @@ if (!defined('ABSPATH')) exit;
         <a href="?page=eventfolio_categories&delete=<?php echo intval($cat->id); ?>" class="ef-btn ef-btn-delete" onclick="return confirm('Delete this category?');">Delete</a>
     </div>
 </div>
+<?}
