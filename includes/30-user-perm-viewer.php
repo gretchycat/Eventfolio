@@ -48,7 +48,6 @@ function ef_user_perm_viewer_row($user_id, $user, $mode = 'view') {
                 <?php echo ucfirst($role); ?>
             </span>
         </div>
-        <div class="ef-user-perm-col"><?php echo esc_html($user['permissions']); ?></div>
         <div class="ef-user-perm-col"><?php echo esc_html($user['updated_at']); ?></div>
         <div class="ef-user-perm-col ef-user-perm-actions">
             <a href="<?php echo esc_url(add_query_arg(['edit' => $user_id])); ?>">Edit</a>
