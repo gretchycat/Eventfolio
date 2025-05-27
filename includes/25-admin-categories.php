@@ -19,6 +19,7 @@ if (!function_exists('ef_category_header_row')) {
 
 function ef_admin_categories_page()
 {
+    $changed=false;
     // --- Handle POST (add/edit) ---
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cat_action']) && check_admin_referer('ef_category_form'))
     {
@@ -34,6 +35,7 @@ function ef_admin_categories_page()
             {
                 ef_insert_category($slug, $name, $visibility, $description);
             }
+            $changed=true;
             // Redirect to main page to clear &add=1
             //wp_redirect(admin_url('admin.php?page=eventfolio_categories'));
             //exit;
@@ -41,6 +43,7 @@ function ef_admin_categories_page()
         elseif ($_POST['cat_action'] === 'save' && $id)
         {
             ef_update_category($id, $name, $visibility, $description);
+            $changed=true;
             //wp_redirect(admin_url('admin.php?page=eventfolio_categories'));
             //exit;
         }
@@ -52,6 +55,7 @@ function ef_admin_categories_page()
         if ($delete_id)
         {
             ef_delete_category($delete_id);
+            $changed=true;
             //wp_redirect(admin_url('admin.php?page=eventfolio_categories'));
             //exit;
         }
@@ -75,7 +79,7 @@ function ef_admin_categories_page()
     ef_category_header_row();
     foreach ($categories as $cat)
     {
-        if ($editing_id == $cat->id) 
+        if ($editing_id == $cat->id && !$changed) 
         {
             ef_category_editor_row($cat, 'edit');
         } else 
