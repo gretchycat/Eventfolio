@@ -233,6 +233,40 @@ function ef_get_categories()
     return $wpdb->get_results("SELECT * FROM $table ORDER BY name ASC");
 }
 
+// Add to includes/05-db.php
+
+function ef_sync_user_permissions_table()
+{
+    global $wpdb;
+
+    $table = EF_USER_PERMISSIONS_TABLE;
+
+    // Get all WordPress users
+    $user_ids = $wpdb->get_col("SELECT ID FROM {$wpdb->users}");
+
+    // Add guest row (user_id = 0) if not present
+    $guest_row = $wpdb->get_var($wpdb->prepare("SELECT user_id FROM $table WHERE user_id = %d", 0));
+    if (!$guest_row) {
+        $wpdb->insert($table, [
+            'user_id'     => 0,
+            'permissions' => 'view_event',
+            'updated_at'  => current_time('mysql')
+        ]);
+    }
+
+    // Ensure every real user has a row
+    foreach ($user_ids as $uid) {
+        $exists = $wpdb->get_var($wpdb->prepare("SELECT user_id FROM $table WHERE user_id = %d", $uid));
+        if (!$exists) {
+            $wpdb->insert($table, [
+                'user_id'     => $uid,
+                'permissions' => 'view_event',
+                'updated_at'  => current_time('mysql')
+            ]);
+        }
+    }
+}
+
 // Get all user permissions (guest + all users)
 function ef_get_all_user_permissions()
 {
