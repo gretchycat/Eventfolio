@@ -3,7 +3,16 @@ set -e
 
 # 1. Lint all PHP files before anything else
 echo "Linting all PHP files recursively..."
-if ! find . -name "*.php" -exec php -l {} \; | grep -v "No syntax errors"; then
+
+ERROR=0
+for f in $(find . -name "*.php"); do
+    echo "Linting $f"
+    if ! php -l "$f"; then
+        ERROR=1
+    fi
+done
+
+if [ "$ERROR" -ne 0 ]; then
     echo "Error: PHP syntax errors detected. Aborting build."
     exit 1
 fi
