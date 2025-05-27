@@ -52,8 +52,7 @@ function et_cat_style()
     margin-right: 0.5em;
 }
 </style>
-EOF
-
+EOF;
 }
 
 function ef_admin_categories_page()
