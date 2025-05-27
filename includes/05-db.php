@@ -234,14 +234,14 @@ function ef_get_categories()
 }
 
 // Get all user permissions (guest + all users)
-function ef_get_all_user_permissions() i
+function ef_get_all_user_permissions()
 {
     global $wpdb;
     $table = EF_USER_PERMISSIONS_TABLE;
     return $wpdb->get_results("SELECT * FROM $table");
 }
 
-function ef_delete_user_permissions($user_id) i
+function ef_delete_user_permissions($user_id)
 {
     global $wpdb;
     $table = EF_USER_PERMISSIONS_TABLE;

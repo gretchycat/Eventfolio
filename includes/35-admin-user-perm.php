@@ -52,7 +52,6 @@ function ef_admin_shared_styles() {
 }
 }
 
-<?php
 if (!defined('ABSPATH')) exit;
 
 function ef_admin_user_permissions_page()

@@ -1,6 +1,14 @@
 #!/bin/bash
 set -e
 
+# 1. Lint all PHP files before anything else
+echo "Linting all PHP files recursively..."
+if ! find . -name "*.php" -exec php -l {} \; | grep -v "No syntax errors"; then
+    echo "Error: PHP syntax errors detected. Aborting build."
+    exit 1
+fi
+echo "All PHP files passed lint check."
+
 META_FILE="plugin.json"
 
 if [ ! -f "$META_FILE" ]; then
@@ -51,11 +59,9 @@ EOF
 
 # Replace the header in the main plugin file
 echo "Updating plugin header in $MAIN_FILE..."
-# Replace first comment block with marker
 perl -0777 -pe "s|/\*.*?\*/|$HEADER|s" "$MAIN_FILE" > "$MAIN_FILE.tmp" 
 mv "$MAIN_FILE.tmp" "$MAIN_FILE"
 
-# Inject header via here-doc instead of echo/awk string interpolation
 # Generate readme.txt
 echo "Generating readme.txt..."
 cat > readme.txt <<EOF
