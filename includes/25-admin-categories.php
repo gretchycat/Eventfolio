@@ -109,11 +109,6 @@ function ef_admin_categories_page()
     ef_admin_nav();
     et_cat_style();
 
-    // Add Category button (shown if not editing or adding)
-    if (!$editing_id && !$adding_new) {
-        echo '<p><a class="button ef-btn-add" href="' . esc_url(admin_url('admin.php?page=eventfolio_categories&add=1')) . '">Add Category</a></p>';
-    }
-
     echo '<div class="ef-category-list">';
     ef_category_header_row();
     foreach ($categories as $cat)
@@ -133,7 +128,14 @@ function ef_admin_categories_page()
             'id'=>0, 'slug'=>'', 'name'=>'', 'visibility'=>'public', 'description'=>''
         ], 'add');
     }
+    // Add Category button (shown if not editing or adding)
+    if (!$editing_id && !$adding_new) {
+        echo '<p><a class="button ef-btn-add" href="' . esc_url(admin_url('admin.php?page=eventfolio_categories&add=1')) . '">Add Category</a></p>';
+    }
+
+
     echo '</div>';
+
 
     // JS for live slug generation
     ?>
