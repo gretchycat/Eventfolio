@@ -17,6 +17,45 @@ if (!function_exists('ef_category_header_row')) {
     }
 }
 
+function et_cat_style()
+{
+    echo <<<EOF
+<style>
+.ef-category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+    width: 100%;
+}
+
+.ef-category-row {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr 1.5fr 3fr 2fr;
+    gap: 0.5em;
+    align-items: center;
+    padding: 0.4em 0.2em;
+    border-bottom: 1px solid #222;
+}
+
+.ef-category-header {
+    font-weight: bold;
+    background: #111;
+    border-bottom: 2px solid #333;
+}
+
+.ef-category-col {
+    overflow-wrap: anywhere;
+    min-width: 0;
+}
+
+.ef-category-actions a {
+    margin-right: 0.5em;
+}
+</style>
+EOF
+
+}
+
 function ef_admin_categories_page()
 {
     $changed=false;
@@ -69,6 +108,7 @@ function ef_admin_categories_page()
 
     // --- Render ---
     ef_admin_nav();
+    et_cat_style();
 
     // Add Category button (shown if not editing or adding)
     if (!$editing_id && !$adding_new) {
