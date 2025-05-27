@@ -61,18 +61,20 @@ function ef_admin_user_permissions_page()
 
     // Handle POST (add/edit/save permissions)
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['perm_action']) && check_admin_referer('ef_user_perm_form'))
+
     {
         $user_id     = intval($_POST['user_id']);
-        $permissions = sanitize_text_field($_POST['permissions']);
-
+        $csv_perms   = sanitize_text_field($_POST['permissions']);
+        $roles = ef_get_role_definitions();
         if ($_POST['perm_action'] === 'save' && $user_id >= 0) {
-            ef_update_user_permissions($user_id, $permissions);
+            $role = ef_best_matching_role($csv_perms, $roles);
+            $final_perms = implode(',', $roles[$role]);
+            ef_update_user_permissions($user_id, $final_perms);
         } elseif ($_POST['perm_action'] === 'delete' && $user_id > 0) {
-            ef_delete_user_permissions($user_id); // implement this in db.php
+            ef_delete_user_permissions($user_id); // only if you want manual delete
         }
-        // No redirect; just reload page to show updated state
-    }
-
+        // Just reload to show updated
+    } 
     // Handle Edit mode via GET
     $editing_id = isset($_GET['edit']) ? intval($_GET['edit']) : -1;
     $adding_new = isset($_GET['add']) && $editing_id < 0;
