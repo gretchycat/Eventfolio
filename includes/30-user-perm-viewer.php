@@ -93,7 +93,7 @@ function ef_user_perm_viewer_row($user_id, $user, $mode = 'view') {
     echo '<span style="padding:2px 10px; border-radius:12px; font-weight:bold; '.$role_style.'">';
     echo ucfirst($role);
     echo '</span></div>';
-    echo '<div class="ef-user-perm-col">'. esc_html($user['permissions']).'</div>';
+    //echo '<div class="ef-user-perm-col">'. esc_html($user['permissions']).'</div>';
     echo '<div class="ef-user-perm-col">'.esc_html($user['updated_at']).'</div>';
     echo '<div class="ef-user-perm-col ef-user-perm-actions"><a href="'. esc_url(add_query_arg(['edit' => $user_id])) .'">Edit</a>';
     if ($user_id !== 0)
