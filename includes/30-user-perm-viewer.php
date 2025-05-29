@@ -96,8 +96,7 @@ function ef_user_perm_viewer_row($user_id, $user, $mode = 'view') {
     //echo '<div class="ef-user-perm-col">'. esc_html($user['permissions']).'</div>';
     echo '<div class="ef-user-perm-col">'.esc_html($user['updated_at']).'</div>';
     echo '<div class="ef-user-perm-col ef-user-perm-actions"><a href="'. esc_url(add_query_arg(['edit' => $user_id])) .'">Edit</a>';
-    if ($user_id !== 0)
-        echo '<a href="'.esc_url(add_query_arg(['reset' => $user_id])).'" onclick="return confirm(\'Reset user permissions for '.esc_attr($user['display_name']).'?\');">Reset</a>';
+    echo '<a href="'.esc_url(add_query_arg(['reset' => $user_id])).'" onclick="return confirm(\'Reset user permissions for '.esc_attr($user['display_name']).'?\');">Reset</a>';
      echo '</div></div>';
 }
     }
