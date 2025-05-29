@@ -19,7 +19,8 @@ function ef_admin_nav()
 }
 
 // Define roles and their canonical permissions
-function ef_get_role_definitions() {
+function ef_get_role_definitions()
+{
     return [
         'guest' => ['view_teaser'],
         'user' => ['view_event', 'rsvp'],
@@ -27,6 +28,7 @@ function ef_get_role_definitions() {
         'admin' => ['view_event', 'rsvp', 'create_event', 'edit_event', 'delete_event', 'assign_category', 'manage_own_rsvps', 'manage_all_rsvps', 'manage_permissions', 'manage_categories', 'manage_users']
     ];
 }
+
 function ef_role_priority($role) {
     $priority = ['guest' => 0, 'user' => 1, 'organizer' => 2, 'admin' => 3];
     return $priority[$role] ?? -1;

@@ -39,7 +39,18 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links)
     return $links;
 });
 
-register_activation_hook(__FILE__, 'ef_install_tables');
+register_activation_hook(__FILE__, function()
+{
+    ef_install_tables();
+    if (is_user_logged_in())
+    {
+        $user = wp_get_current_user();
+        if ($user && $user->ID)
+        {
+            update_option('eventfolio_activating_admin_user_id', intval($user->ID));
+        }
+    }
+});
 
 // require_once plugin_dir_path(__FILE__) . 'includes/admin-info.php';
 // ...in admin_menu:

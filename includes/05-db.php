@@ -241,28 +241,21 @@ function ef_sync_user_permissions_table()
 
     $table = EF_USER_PERMISSIONS_TABLE;
 
-    // Get all WordPress users
-    $user_ids = $wpdb->get_col("SELECT ID FROM {$wpdb->users}");
-
     // Add guest row (user_id = 0) if not present
     $guest_row = $wpdb->get_var($wpdb->prepare("SELECT user_id FROM $table WHERE user_id = %d", 0));
-    if (!$guest_row) {
-        $wpdb->insert($table, [
-            'user_id'     => 0,
-            'permissions' => 'view_event',
-            'updated_at'  => current_time('mysql')
-        ]);
+    if (!$guest_row)
+    {
+        ef_reset_user_permissions(0);
     }
-
+    // Get all WordPress users
+    $user_ids = $wpdb->get_col("SELECT ID FROM {$wpdb->users}");
     // Ensure every real user has a row
-    foreach ($user_ids as $uid) {
+    foreach ($user_ids as $uid)
+    {
         $exists = $wpdb->get_var($wpdb->prepare("SELECT user_id FROM $table WHERE user_id = %d", $uid));
-        if (!$exists) {
-            $wpdb->insert($table, [
-                'user_id'     => $uid,
-                'permissions' => 'view_event',
-                'updated_at'  => current_time('mysql')
-            ]);
+        if (!$exists)
+        {
+            ef_reset_user_permissions($uid);
         }
     }
 }
@@ -281,3 +274,22 @@ function ef_delete_user_permissions($user_id)
     $table = EF_USER_PERMISSIONS_TABLE;
     return $wpdb->delete($table, ['user_id' => $user_id]);
 }
+
+function ef_reset_user_permissions($user_id)
+{
+    $roles = ef_get_role_definitions();
+    $activator_id = intval(get_option('eventfolio_activating_admin_user_id'));
+    if ($user_id == 0) { // guest
+        $perms = $roles['guest'];
+    }
+    elseif ($user_id == $activator_id)
+    { // activating admin
+        $perms = $roles['admin'];
+    }
+    else
+    { // all others
+        $perms = $roles['guest'];
+    }
+    ef_update_user_permissions($user_id, implode(',', $perms));
+}
+

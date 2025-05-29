@@ -73,6 +73,10 @@ function ef_admin_user_permissions_page()
             ef_update_user_permissions($user_id, $final_perms);
             $updated=true;
         } 
+        elseif ($_POST['perm_action'] === 'reset' && $user_id >= 0) 
+        {
+           ef_reset_user_permissions($user_id); 
+        }
         elseif ($_POST['perm_action'] === 'delete' && $user_id >= 0) 
         {
             ef_delete_user_permissions($user_id); // only if you want manual delete
