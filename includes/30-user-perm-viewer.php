@@ -71,7 +71,39 @@ function ef_detect_user_role($perm_csv)
 // Viewer row
 if (!function_exists('ef_user_perm_viewer_row'))
 {
-function ef_user_perm_viewer_row($user_id, $user, $perm_csv)
+    if (!function_exists('ef_user_perm_viewer_row'))
+    {
+function ef_user_perm_viewer_row($user_id, $user, $mode = 'view') {
+    if ($mode === 'edit') 
+    {
+        ef_user_perm_editor_row($user_id, $user);
+        return;
+    }
+
+    // Role/color logic
+    $roles = ef_get_role_definitions();
+    $role = ef_best_matching_role($user['permissions'], $roles);
+    $role_style = ef_role_color($role);
+
+    echo '<div class="ef-user-perm-row">';
+    echo '<div class="ef-user-perm-col">'. esc_html($user['display_name']).'</div>';
+    echo '<div class="ef-user-perm-col">'. esc_html($user['user_login']).'</div>';
+    echo '<div class="ef-user-perm-col">'. esc_html($user['user_email']).'</div>';
+    echo '<div class="ef-user-perm-col">';
+    echo '<span style="padding:2px 10px; border-radius:12px; font-weight:bold; '.$role_style.'">';
+    echo ucfirst($role);
+    echo '</span></div>';
+    echo '<div class="ef-user-perm-col">'. esc_html($user['permissions']).'</div>';
+    echo '<div class="ef-user-perm-col">'.esc_html($user['updated_at']).'</div>';
+    echo '<div class="ef-user-perm-col ef-user-perm-actions"><a href="'. esc_url(add_query_arg(['edit' => $user_id])) .'">Edit</a>';
+    if ($user_id !== 0)
+        echo '<a href="'.esc_url(add_query_arg(['delete' => $user_id])).'" onclick="return confirm(\'Delete user permissions for '.esc_attr($user['display_name']).'?\');">Delete</a>';
+     echo '</div></div>';
+}
+    }
+}
+
+function ef_user_perm_viewer_row_broken($user_id, $user, $perm_csv)
 {
     $role = ef_detect_user_role($perm_csv);
 
@@ -100,4 +132,4 @@ function ef_user_perm_viewer_row($user_id, $user, $perm_csv)
     echo '</div>';
     echo '</div>';
 }
-}
+
