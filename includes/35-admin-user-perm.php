@@ -58,7 +58,7 @@ function ef_admin_user_permissions_page()
 {
     // Ensure all users + guest exist in the permissions table
     ef_sync_user_permissions_table();
-        $updated=false;
+    $updated=false;
     // Handle POST (add/edit/save permissions)
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['perm_action']) && check_admin_referer('ef_user_perm_form'))
 
@@ -66,11 +66,15 @@ function ef_admin_user_permissions_page()
         $user_id     = intval($_POST['user_id']);
         $csv_perms   = sanitize_text_field($_POST['permissions']);
         $roles = ef_get_role_definitions();
-        if ($_POST['perm_action'] === 'save' && $user_id >= 0) {
+        if ($_POST['perm_action'] === 'save' && $user_id >= 0) 
+        {
             $role = ef_best_matching_role($csv_perms, $roles);
             $final_perms = implode(',', $roles[$role]);
             ef_update_user_permissions($user_id, $final_perms);
-        } elseif ($_POST['perm_action'] === 'delete' && $user_id > 0) {
+            $updated=true;
+        } 
+        elseif ($_POST['perm_action'] === 'delete' && $user_id >= 0) 
+        {
             ef_delete_user_permissions($user_id); // only if you want manual delete
             $updated=true;
         }
