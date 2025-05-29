@@ -79,10 +79,8 @@ function ef_admin_user_permissions_page()
     // Handle Edit mode via GET
     $editing_id=-1;
     if(!$updated)
-    {
         $editing_id = isset($_GET['edit']) ? intval($_GET['edit']) : -1;
-        $adding_new = isset($_GET['add']) && $editing_id < 0;
-    }
+    $adding_new = isset($_GET['add']) && $editing_id < 0;
 
     // Get all users in WP
     $wp_users = get_users(['fields' => ['ID', 'display_name', 'user_login', 'user_email']]);
