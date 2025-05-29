@@ -102,33 +102,3 @@ function ef_user_perm_viewer_row($user_id, $user, $mode = 'view') {
     }
 }
 
-function ef_user_perm_viewer_row_broken($user_id, $user, $perm_csv)
-{
-    $role = ef_detect_user_role($perm_csv);
-
-    // Assign color per role
-    $role_colors = [
-        'guest'     => 'background:#222; color:#fff;',
-        'user'      => 'background:#065f46; color:#fff;',      // green
-        'organizer' => 'background:#eab308; color:#111;',      // yellow
-        'admin'     => 'background:#b91c1c; color:#fff;',      // red
-    ];
-
-    $role_label = ucfirst($role);
-    $style = isset($role_colors[$role]) ? $role_colors[$role] : '';
-
-    echo '<div class="ef-user-row">';
-    echo '<div class="ef-user-col ef-user-perm"><span class="ef-role-label" style="padding:2px 12px;border-radius:12px;font-weight:600;'.$style.'">' . esc_html($role_label) . '</span></div>';
-    echo '<div class="ef-user-col ef-user-name">' . esc_html($user->display_name ?? 'guest') . '</div>';
-    echo '<div class="ef-user-col ef-user-login">' . esc_html($user->user_login ?? 'guest') . '</div>';
-    echo '<div class="ef-user-col ef-user-email">' . esc_html($user->user_email ?? '') . '</div>';
-    echo '<div class="ef-user-col ef-user-actions">';
-    echo '<a href="?page=eventfolio_user_permissions&edit=' . intval($user_id) . '">Edit</a>';
-    // Only allow delete for real users, not guest
-    if ($user_id > 0) {
-        echo ' <a href="?page=eventfolio_user_permissions&delete=' . intval($user_id) . '" style="color:#b91c1c;">Delete</a>';
-    }
-    echo '</div>';
-    echo '</div>';
-}
-
