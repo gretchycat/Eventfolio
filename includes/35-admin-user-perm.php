@@ -58,7 +58,7 @@ function ef_admin_user_permissions_page()
 {
     // Ensure all users + guest exist in the permissions table
     ef_sync_user_permissions_table();
-
+        $updated=false;
     // Handle POST (add/edit/save permissions)
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['perm_action']) && check_admin_referer('ef_user_perm_form'))
 
@@ -72,12 +72,17 @@ function ef_admin_user_permissions_page()
             ef_update_user_permissions($user_id, $final_perms);
         } elseif ($_POST['perm_action'] === 'delete' && $user_id > 0) {
             ef_delete_user_permissions($user_id); // only if you want manual delete
+            $updated=true;
         }
         // Just reload to show updated
     } 
     // Handle Edit mode via GET
-    $editing_id = isset($_GET['edit']) ? intval($_GET['edit']) : -1;
-    $adding_new = isset($_GET['add']) && $editing_id < 0;
+    $editing_id=-1;
+    if(!$updated)
+    {
+        $editing_id = isset($_GET['edit']) ? intval($_GET['edit']) : -1;
+        $adding_new = isset($_GET['add']) && $editing_id < 0;
+    }
 
     // Get all users in WP
     $wp_users = get_users(['fields' => ['ID', 'display_name', 'user_login', 'user_email']]);
