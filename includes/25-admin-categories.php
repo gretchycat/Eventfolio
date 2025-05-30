@@ -49,8 +49,38 @@ function et_cat_style()
 
 .ef-category-actions a {
     margin-right: 0.5em;
+    text-align: right;
 }
 </style>
+
+.ef-category-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+.ef-category-table th,
+.ef-category-table td {
+    padding: 0.5em 1em;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.ef-category-table th:nth-child(4),
+.ef-category-table td:nth-child(4) {
+    /* Description column */
+    width: 40%;
+    min-width: 140px;
+    white-space: normal;
+}
+
+.ef-category-table th:nth-child(5),
+.ef-category-table td:nth-child(5) {
+    /* Actions column */
+    width: 1%;
+    white-space: nowrap;
+    text-align: right;
+}
 EOF;
 }
 
