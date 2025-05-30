@@ -7,10 +7,10 @@ if (!function_exists('ef_category_header_row')) {
     {
         ?>
         <div class="ef-category-row ef-category-header">
-            <div class="ef-category-col">Name</div>
-            <div class="ef-category-col">Visibility</div>
-            <div class="ef-category-col">Description</div>
-            <div class="ef-category-col ef-category-actions">Actions</div>
+            <div class="ef-category-col-name">Name</div>
+            <div class="ef-category-col-visibility">Visibility</div>
+            <div class="ef-category-col-description">Description</div>
+            <div class="ef-category-col-actions">Actions</div>
         </div>
         <?php
     }
@@ -23,63 +23,40 @@ function et_cat_style()
 .ef-category-list {
     display: flex;
     flex-direction: column;
-    gap: 0.25em;
     width: 100%;
 }
 
 .ef-category-row {
-    display: grid;
-    grid-template-columns: 1.5fr 2fr 1.5fr 3fr 2fr;
-    gap: 0.5em;
+    display: flex;
+    flex-direction: row;
     align-items: center;
-    padding: 0.4em 0.2em;
-    border-bottom: 1px solid #222;
-}
-
-.ef-category-header {
-    font-weight: bold;
-    background: #111;
-    border-bottom: 2px solid #333;
+    border-bottom: 1px solid #333;
 }
 
 .ef-category-col {
+    padding: 0.4em 0.8em;
+    flex: 1 1 0;        /* Default: all cols flex equally */
+    min-width: 80px;
     overflow-wrap: anywhere;
-    min-width: 0;
 }
 
-.ef-category-actions a {
-    margin-right: 0.5em;
+/* Specific widths */
+.ef-category-col.name {
+    flex: 0 0 120px;    /* Fixed width for Name */
+}
+.ef-category-col.visibility {
+    flex: 0 0 90px;     /* Smaller fixed width for Visibility */
+}
+.ef-category-col.description {
+    flex: 2 1 200px;    /* Let Description stretch and take more space */
+    min-width: 150px;
+}
+.ef-category-col.actions {
+    flex: 0 0 90px;     /* Keep Actions small and fixed */
     text-align: right;
+    white-space: nowrap;
 }
 </style>
-
-.ef-category-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: auto;
-}
-
-.ef-category-table th,
-.ef-category-table td {
-    padding: 0.5em 1em;
-    text-align: left;
-    vertical-align: middle;
-}
-
-.ef-category-table th:nth-child(4),
-.ef-category-table td:nth-child(4) {
-    /* Description column */
-    width: 40%;
-    min-width: 140px;
-    white-space: normal;
-}
-
-.ef-category-table th:nth-child(5),
-.ef-category-table td:nth-child(5) {
-    /* Actions column */
-    width: 1%;
-    white-space: nowrap;
-    text-align: right;
 }
 EOF;
 }
@@ -142,16 +119,16 @@ function ef_admin_categories_page()
     ef_category_header_row();
     foreach ($categories as $cat)
     {
-        if ($editing_id == $cat->id && !$changed) 
+        if ($editing_id == $cat->id && !$changed)
         {
             ef_category_editor_row($cat, 'edit');
-        } else 
+        } else
         {
             ef_category_viewer_row($cat);
         }
     }
     // Only show add row if adding_new and not currently editing
-    if ($adding_new) 
+    if ($adding_new)
     {
         ef_category_editor_row((object)[
             'id'=>0, 'slug'=>'', 'name'=>'', 'visibility'=>'public', 'description'=>''
