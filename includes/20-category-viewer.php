@@ -5,7 +5,6 @@ if (!function_exists('ef_category_viewer_row')) {
         if (!$cat) return;
         ?>
         <div class="ef-category-row ef-category-viewer">
-            <div class="ef-category-col"><?php echo esc_html($cat->slug); ?></div>
             <div class="ef-category-col"><?php echo esc_html($cat->name); ?></div>
             <div class="ef-category-col"><?php echo esc_html(ucfirst($cat->visibility ?? '')); ?></div>
             <div class="ef-category-col"><?php echo esc_html($cat->description); ?></div>

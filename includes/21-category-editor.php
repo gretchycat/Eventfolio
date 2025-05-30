@@ -8,9 +8,6 @@ if (!function_exists('ef_category_editor_row')) {
         <?php wp_nonce_field('ef_category_form'); ?>
             <input type="hidden" name="cat_id" value="<?php echo intval($cat->id); ?>">
             <div class="ef-category-col">
-                <input class="ef-input" type="text" name="cat_slug" value="<?php echo esc_attr($cat->slug); ?>" <?php if ($mode === 'edit') echo 'readonly'; ?> required>
-            </div>
-            <div class="ef-category-col">
                 <input class="ef-input" type="text" name="cat_name" value="<?php echo esc_attr($cat->name); ?>" required>
             </div>
             <div class="ef-category-col">

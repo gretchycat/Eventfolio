@@ -7,7 +7,6 @@ if (!function_exists('ef_category_header_row')) {
     {
         ?>
         <div class="ef-category-row ef-category-header">
-            <div class="ef-category-col">Slug</div>
             <div class="ef-category-col">Name</div>
             <div class="ef-category-col">Visibility</div>
             <div class="ef-category-col">Description</div>
@@ -62,7 +61,7 @@ function ef_admin_categories_page()
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cat_action']) && check_admin_referer('ef_category_form'))
     {
         $id = intval($_POST['cat_id']);
-        $slug = sanitize_title($_POST['cat_slug']);
+        $slug = sanitize_title($_POST['cat_name']);
         $name = sanitize_text_field($_POST['cat_name']);
         $visibility = ($_POST['cat_visibility'] === 'private') ? 'private' : 'public';
         $description = sanitize_text_field($_POST['cat_description']);
