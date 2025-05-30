@@ -47,9 +47,9 @@ function et_cat_style()
     align-items: center;
 }
 
-.ef-col-name        { flex: 1 1 12em; }
-.ef-col-visibility  { flex: 0 1 6em;  text-align: left; }
-.ef-col-description { flex: 2 1 20em; }
+.ef-col-name        { flex: 1 1 10em; }
+.ef-col-visibility  { flex: 0 1 8em;  text-align: left; }
+.ef-col-description { flex: 2 1 22em; }
 .ef-col-actions     { flex: 0 0 8em;  text-align: right; }
 </style>
 EOF;
