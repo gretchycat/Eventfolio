@@ -49,7 +49,7 @@ function et_cat_style()
 
 .ef-col-name        { flex: 1 1 10em; }
 .ef-col-visibility  { flex: 0 1 9em;  text-align: left; }
-.ef-col-description { flex: 2 1 42em; }
+.ef-col-description { flex: 2 1 24em; }
 .ef-col-actions     { flex: 0 0 8em;  text-align: right; }
 </style>
 EOF;
