@@ -69,7 +69,6 @@ function et_cat_style()
     min-width: 60px;
     box-sizing: border-box;
     font-size: inherit;
-    padding: 4px 6px;
     background: #1a1c1f;
     color: #fff;
     border: 1px solid #333;
