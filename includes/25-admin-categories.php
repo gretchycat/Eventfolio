@@ -7,10 +7,10 @@ if (!function_exists('ef_category_header_row')) {
     {
         ?>
         <div class="ef-category-row ef-category-header">
-            <div class="ef-category-col-name">Name</div>
-            <div class="ef-category-col-visibility">Visibility</div>
-            <div class="ef-category-col-description">Description</div>
-            <div class="ef-category-col-actions">Actions</div>
+            <div class="ef-category-col ef-col-name">Name</div>
+            <div class="ef-category-col ef-col-visibility">Visibility</div>
+            <div class="ef-category-col ef-col-description">Description</div>
+            <div class="ef-category-col ef-col-actions">Actions</div>
         </div>
         <?php
     }
@@ -23,46 +23,34 @@ function et_cat_style()
 .ef-category-list {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    gap: 0;
 }
 
 .ef-category-row {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    border-bottom: 1px solid #333;
-}
-
-.ef-category-col {
-    padding: 0.4em 0.8em;
-    flex: 1 1 0;        /* Default: all cols flex equally */
-    min-width: 80px;
-    overflow-wrap: anywhere;
+    align-items: stretch;
+    border-bottom: 1px solid #444;
 }
 
 .ef-category-header {
-    background: #222;
-    color: #fff;
     font-weight: bold;
-    border-bottom: 2px solid #555;
+    background: #191919;
+    color: #fff;
 }
 
-/* Specific widths */
-.ef-category-col.name {
-    flex: 0 0 120px;    /* Fixed width for Name */
+.ef-category-col {
+    padding: 0.5em 1em;
+    min-width: 0;
+    word-break: break-all;
+    display: flex;
+    align-items: center;
 }
-.ef-category-col.visibility {
-    flex: 0 0 90px;     /* Smaller fixed width for Visibility */
-}
-.ef-category-col.description {
-    flex: 2 1 200px;    /* Let Description stretch and take more space */
-    min-width: 150px;
-}
-.ef-category-col.actions {
-    flex: 0 0 90px;     /* Keep Actions small and fixed */
-    text-align: right;
-    white-space: nowrap;
-}
+
+.ef-col-name        { flex: 1 1 12em; }
+.ef-col-visibility  { flex: 0 1 6em;  text-align: left; }
+.ef-col-description { flex: 2 1 20em; }
+.ef-col-actions     { flex: 0 0 8em;  text-align: right; }
 </style>
 EOF;
 }
