@@ -64,10 +64,20 @@ function et_cat_style()
     border: 1px solid #333;
     border-radius: 4px;
 }
-
+.ef-category-col select {
+    width: 100% !important;
+    min-width: 60px;
+    box-sizing: border-box;
+    font-size: inherit;
+    padding: 4px 6px;
+    background: #1a1c1f;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 4px;
+}
 /* Optional: tighten up space between columns if needed */
 .ef-category-row {
-    gap: 0.5em;
+    gap: 0.05em;
 }
 </style>
 EOF;
