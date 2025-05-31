@@ -68,6 +68,23 @@ function et_cat_style()
 .ef-category-row {
     gap: 0.05em;
 }
+.ef-btn.ef-btn-save {
+    background: none;
+    border: none;
+    color: #2196F3;         /* Same as your links */
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.ef-btn.ef-btn-save:hover,
+.ef-btn.ef-btn-save:focus {
+    color: #1976D2;         /* Slightly darker on hover, optional */
+    text-decoration: underline;
+}
 </style>
 EOF;
 }
