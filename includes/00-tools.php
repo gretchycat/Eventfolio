@@ -51,3 +51,40 @@ function ef_best_matching_role($csv_perms, $role_definitions)
     return $best_role;
 }
 
+function ef_get_permission_sets()
+{
+    static $sets = null;
+
+    if (is_null($sets))
+    {
+        // This array is your canonical source.
+        // Extend as needed (labels, descriptions, etc.)
+        $sets = [
+            'guest' => [
+                'label' => 'Guest',
+                'permissions' => ['view_teaser'],
+            ],
+            'user' => [
+                'label' => 'Validated User',
+                'permissions' => ['view_event', 'rsvp'],
+            ],
+            'organizer' => [
+                'label' => 'Organizer',
+                'permissions' => [
+                    'view_event',
+                    'rsvp',
+                    'create_event',
+                    'edit_event',
+                    'delete_event',
+                    'manage_categories',
+                ],
+            ],
+            'admin' => [
+                'label' => 'Admin',
+                'permissions' => ['*'],
+            ],
+        ];
+    }
+
+    return $sets;
+}

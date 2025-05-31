@@ -29,21 +29,10 @@ function ef_user_perm_header_row()
     }
 }
 
-// Define role permission sets (central place for easy updates)
-function ef_get_role_permission_sets()
-{
-    return [
-        'guest'     => ['view_event'],
-        'user'      => ['view_event', 'rsvp_event'],
-        'organizer' => ['view_event', 'rsvp_event', 'create_event', 'edit_event', 'delete_event'],
-        'admin'     => ['view_event', 'rsvp_event', 'create_event', 'edit_event', 'delete_event', 'manage_permissions']
-    ];
-}
-
 // Determine role by strict or closest match
 function ef_detect_user_role($perm_csv)
 {
-    $roles = ef_get_role_permission_sets();
+    $roles = ef_get_permission_sets();
     $perms = array_filter(array_map('trim', explode(',', strtolower($perm_csv))));
     // Empty or single 'view_event' => guest
     if (empty($perms) || (count($perms) === 1 && $perms[0] === 'view_event')) {
