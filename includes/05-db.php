@@ -264,9 +264,10 @@ function ef_get_user_permissions($user_id)
 {
     global $wpdb, $ef_user_permissions;
 
+    $table = EF_USER_PERMISSIONS_TABLE;
     $row = $wpdb->get_row(
         $wpdb->prepare(
-            "SELECT permissions FROM $ef_user_permissions WHERE user_id = %d",
+            "SELECT permissions FROM $table WHERE user_id = %d",
             $user_id
         )
     );
