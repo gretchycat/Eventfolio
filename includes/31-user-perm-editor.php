@@ -1,10 +1,14 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-if (!function_exists('ef_user_perm_editor_row')) 
+if (!function_exists('ef_user_perm_editor_row'))
 {
-function ef_user_perm_editor_row($user_id, $user, $current_perm_csv)
+function ef_user_perm_editor_row($user_id, $user)
 {
+// Get current permissions CSV from database for this user
+    $current_perm_csv = ef_get_user_permissions($user_id);
+
+    // (rest of the function as before...)
     $perm_sets = ef_get_permission_sets();
 
     // Detect current role by exact permission match
