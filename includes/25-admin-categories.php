@@ -49,8 +49,8 @@ function et_cat_style()
 
 .ef-col-name        { flex: 1 1 17%; }
 .ef-col-visibility  { flex: 0 1 17%;  text-align: left; }
-.ef-col-description { flex: 2 1 51%; }
-.ef-col-actions     { flex: 0 0 15%;  text-align: right; }
+.ef-col-description { flex: 2 1 49%; }
+.ef-col-actions     { flex: 0 0 17%;  text-align: right; }
 .ef-category-col input[type="text"],
 .ef-category-col textarea,
 
