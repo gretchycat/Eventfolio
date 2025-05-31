@@ -29,12 +29,12 @@ function ef_user_perm_editor_row($user_id, $user)
         }
     }
 
-    echo '<div class="ef-userperm-row ef-userperm-editor">';
+    echo '<div class="ef-row">';
     echo '<form method="post">';
-    echo '<div class="ef-userperm-col ef-col-username">' . esc_html($user->user_login ?? 'guest') . '</div>';
-    echo '<div class="ef-userperm-col ef-col-email">'   . esc_html($user->user_email ?? '') . '</div>';
+    echo '<div class="ef-col ef-col-username">' . esc_html($user->user_login ?? 'guest') . '</div>';
+    echo '<div class="ef-col ef-col-email">'   . esc_html($user->user_email ?? '') . '</div>';
 
-    echo '<div class="ef-userperm-col ef-col-permissions">';
+    echo '<div class="ef-col ef-col-permissions">';
     echo '<select name="user_permission_set">';
     foreach ($perm_sets as $role => $perms)
     {
@@ -50,7 +50,7 @@ function ef_user_perm_editor_row($user_id, $user)
     echo '</select>';
     echo '</div>';
 
-    echo '<div class="ef-userperm-col ef-col-actions">';
+    echo '<div class="ef-col ef-col-actions">';
     echo '<button type="submit" name="perm_action" value="save" class="ef-link-btn">Save</button>';
     echo '<a href="' . esc_url(admin_url('admin.php?page=eventfolio_user_permissions')) . '" class="ef-link-btn">Cancel</a>';
     echo '</div>';

@@ -2,6 +2,23 @@
 
 if (!defined('ABSPATH')) exit;
 
+if (!function_exists('ef_user_perm_header_row'))
+{
+function ef_user_perm_header_row()
+    {
+    echo <<<EOF
+    <div class="ef-row ef-header">
+        <div class="ef-col ef-col-user">User</div>
+        <div class="ef-col ef-col-username">Username</div>
+        <div class="ef-col ef-col-email"></div>
+        <div class="ef-col ef-col-permissions">Permissions</div>
+        <div class="ef-col ef-col-updated">Updated</div>
+        <div class="ef-col ef-actions">Actions</div>
+    </div>
+    EOF;
+    }
+}
+
 function ef_admin_user_permissions_page()
 {
     // Ensure all users + guest exist in the permissions table
