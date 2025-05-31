@@ -66,24 +66,24 @@ function ef_admin_user_permissions_page()
         $user_id     = intval($_POST['user_id']);
         $csv_perms   = sanitize_text_field($_POST['permissions']);
         $roles = ef_get_role_definitions();
-        if ($_POST['perm_action'] === 'save' && $user_id >= 0) 
+        if ($_POST['perm_action'] === 'save' && $user_id >= 0)
         {
             $role = ef_best_matching_role($csv_perms, $roles);
             $final_perms = implode(',', $roles[$role]);
             ef_update_user_permissions($user_id, $final_perms);
             $updated=true;
-        } 
-        elseif ($_POST['perm_action'] === 'reset' && $user_id >= 0) 
-        {
-           ef_reset_user_permissions($user_id); 
         }
-        elseif ($_POST['perm_action'] === 'delete' && $user_id >= 0) 
+        elseif ($_POST['perm_action'] === 'reset' && $user_id >= 0)
+        {
+           ef_reset_user_permissions($user_id);
+        }
+        elseif ($_POST['perm_action'] === 'delete' && $user_id >= 0)
         {
             ef_delete_user_permissions($user_id); // only if you want manual delete
             $updated=true;
         }
         // Just reload to show updated
-    } 
+    }
     // Handle Edit mode via GET
     $editing_id=-1;
     if(!$updated)
