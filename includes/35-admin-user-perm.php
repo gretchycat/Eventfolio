@@ -66,7 +66,7 @@ function ef_admin_user_permissions_page()
         $perms_by_id[intval($row->user_id)] = $row;
     }
 
-    ef_style();
+    //ef_style();
     // --- Render Admin Nav ---
     ef_admin_nav();
 

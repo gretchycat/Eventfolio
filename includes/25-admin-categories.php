@@ -68,7 +68,7 @@ function ef_admin_categories_page()
 
     // --- Render ---
     ef_admin_nav();
-    ef_style();
+    //ef_style();
 
     echo '<div class="ef-list">';
     ef_category_header_row();
