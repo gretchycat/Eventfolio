@@ -22,26 +22,27 @@ function et_style()
 {
     echo <<<EOF
 <style>
-.ef-list{
+.ef-list {
     display: flex;
     flex-direction: column;
     gap: 0;
 }
 
-.ef-row{
+.ef-row {
     display: flex;
     flex-direction: row;
     align-items: stretch;
     height: 32px;
     border-bottom: 1px solid #444;
+    gap: 0.05em;
 }
 
-.ef-header{
+.ef-header {
     font-weight: bold;
     background: rgba(0,0,0,0.1);
 }
 
-.ef-col{
+.ef-col {
     padding: 0;
     margin: 0;
     min-width: 0;
@@ -49,29 +50,25 @@ function et_style()
     display: flex;
     align-items: center;
 }
+
+/* Category columns */
+.ef-col-name        { flex: 1 1 17%; }
+.ef-col-visibility  { flex: 0 1 17%;  text-align: left; }
+.ef-col-description { flex: 2 1 49%; }
+.ef-col-actions     { flex: 0 0 17%;  text-align: right; }
+
+/* User permission columns */
 .ef-col-user         { flex: 1 0 14%; min-width: 90px; }
 .ef-col-username     { flex: 1 0 14%; min-width: 90px; }
 .ef-col-email        { flex: 2 1 22%; min-width: 120px; }
 .ef-col-permissions  { flex: 1 0 14%; min-width: 80px; text-align: center; }
 .ef-col-updated      { flex: 1 0 18%; min-width: 90px; }
+/* Actions reused above */
 
-/* Responsive: stack or scroll if too narrow */
-@media (max-width: 600px){
-    .ef-row, .ef-list { flex-direction: column;
-    }
-    .ef-col{
-        width: 100% !important;
-        min-width: 0 !important;
-        box-sizing: border-box;
-    }
-}
-.ef-col-name        { flex: 1 1 17%; }
-.ef-col-visibility  { flex: 0 1 17%;  text-align: left; }
-.ef-col-description { flex: 2 1 49%; }
-.ef-col-actions     { flex: 0 0 17%;  text-align: right; }
+/* Form/input elements in cells */
 .ef-col input[type="text"],
 .ef-col textarea,
-.ef-col select{
+.ef-col select {
     width: 100% !important;
     padding: 0;
     margin: 0;
@@ -82,14 +79,12 @@ function et_style()
     border: 1px solid #333;
     border-radius: 4px;
 }
-/* Optional: tighten up space between columns if needed */
-.ef-row{
-    gap: 0.05em;
-}
-.ef-btn.ef-btn-save{
+
+/* Button-as-link styling */
+.ef-btn.ef-btn-save {
     background: none;
     border: none;
-    color: #2196F3;         /* Same as your links */
+    color: #2196F3; /* Same as links */
     padding: 0;
     margin: 0;
     font: inherit;
@@ -98,9 +93,27 @@ function et_style()
     transition: color 0.2s;
 }
 .ef-btn.ef-btn-save:hover,
-.ef-btn.ef-btn-save:focus{
-    color: #1976D2;         /* Slightly darker on hover, optional */
+.ef-btn.ef-btn-save:focus {
+    color: #1976D2;
     text-decoration: underline;
+}
+
+/* Responsive: stack or scroll if too narrow */
+@media (max-width: 600px) {
+    .ef-list {
+        flex-direction: column;
+    }
+    .ef-row {
+        flex-direction: column;
+        height: auto;
+        gap: 0;
+    }
+    .ef-col {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box;
+        text-align: left !important;
+    }
 }
 </style>
 EOF;
