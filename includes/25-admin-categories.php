@@ -30,6 +30,7 @@ function et_cat_style()
     display: flex;
     flex-direction: row;
     align-items: stretch;
+    height: 32px;
     border-bottom: 1px solid #444;
 }
 
