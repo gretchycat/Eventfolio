@@ -40,7 +40,8 @@ function et_cat_style()
 }
 
 .ef-category-col {
-    padding: 0.5em 1em;
+    padding: 0;
+    margin: 0;
     min-width: 0;
     word-break: break-all;
     display: flex;
@@ -56,6 +57,8 @@ function et_cat_style()
 
 .ef-category-col select {
     width: 100% !important;
+    padding: 0;
+    margin: 0;
     min-width: 60px;
     box-sizing: border-box;
     font-size: inherit;
