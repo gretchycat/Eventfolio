@@ -54,7 +54,6 @@ function et_style()
 .ef-col-email        { flex: 2 1 22%; min-width: 120px; }
 .ef-col-permissions  { flex: 1 0 14%; min-width: 80px; text-align: center; }
 .ef-col-updated      { flex: 1 0 18%; min-width: 90px; }
-.ef-col-actions      { flex: 0 0 18%; min-width: 90px; text-align: right; }
 
 /* Responsive: stack or scroll if too narrow */
 @media (max-width: 600px){
