@@ -1,0 +1,28 @@
+# Ignore build artifacts and local development files
+build/
+
+# Editor swap/backup files
+*.swp
+.*.swp
+*.swo
+
+# Mac and Linux hidden files
+.DS_Store
+Thumbs.db
+
+# IDE/project files
+.vscode/
+.idea/
+
+# Ignore all .zip files
+*.zip
+
+# Ignore the plugin readme (if not needed in version control)
+readme.txt
+
+# Ignore backup files
+*~
+*.bak
+
+# Ignore any hidden files at the top level (optional)
+.*
