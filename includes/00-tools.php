@@ -18,7 +18,7 @@ function ef_admin_nav()
     echo '</div>';
 }
 
-function et_style()
+function ef_style()
 {
     echo <<<EOF
 <style>

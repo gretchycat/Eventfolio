@@ -26,7 +26,6 @@ function ef_admin_user_permissions_page()
     $updated=false;
     // Handle POST (add/edit/save permissions)
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['perm_action']) && check_admin_referer('ef_user_perm_form'))
-
     {
         $user_id     = intval($_POST['user_id']);
         $csv_perms   = sanitize_text_field($_POST['permissions']);
@@ -62,11 +61,12 @@ function ef_admin_user_permissions_page()
 
     // Map: user_id => [permissions, updated_at]
     $perms_by_id = [];
-    foreach ($all_perms as $row) {
+    foreach ($all_perms as $row)
+    {
         $perms_by_id[intval($row->user_id)] = $row;
     }
 
-    et_style();
+    ef_style();
     // --- Render Admin Nav ---
     ef_admin_nav();
 
