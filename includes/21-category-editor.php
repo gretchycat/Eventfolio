@@ -23,7 +23,7 @@ if (!function_exists('ef_category_editor_row')) {
                 <button class="ef-btn ef-btn-save" type="submit" name="cat_action" value="<?php echo $mode === 'add' ? 'add' : 'save'; ?>">
                     <?php echo $mode === 'add' ? 'Add' : 'Save'; ?>
                 </button>
-                <?php if ($mode === 'edit'): ?>
+                <?php if ($mode === 'edit'): ?>&nbsp;
                     <a href="?page=eventfolio_categories" class="ef-btn ef-btn-cancel">Cancel</a>
                 <?php endif; ?>
             </div>
