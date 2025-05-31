@@ -260,6 +260,24 @@ function ef_sync_user_permissions_table()
     }
 }
 
+function ef_get_user_permissions($user_id)
+{
+    global $wpdb, $ef_user_permissions;
+
+    $row = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT permissions FROM $ef_user_permissions WHERE user_id = %d",
+            $user_id
+        )
+    );
+
+    if ($row && isset($row->permissions))
+    {
+        return $row->permissions;
+    }
+    return '';
+}
+
 // Get all user permissions (guest + all users)
 function ef_get_all_user_permissions()
 {
