@@ -53,17 +53,7 @@ function et_cat_style()
 .ef-col-actions     { flex: 0 0 8em;  text-align: right; }
 .ef-category-col input[type="text"],
 .ef-category-col textarea,
-.ef-category-col select {
-    width: 100%;
-    box-sizing: border-box;
-    font-size: inherit;
-    margin: 0;
-    padding: 4px 6px;
-    background: #1a1c1f;
-    color: #fff;
-    border: 1px solid #333;
-    border-radius: 4px;
-}
+
 .ef-category-col select {
     width: 100% !important;
     min-width: 60px;
