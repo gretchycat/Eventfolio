@@ -6,11 +6,11 @@ if (!function_exists('ef_category_header_row')) {
     function ef_category_header_row()
     {
         ?>
-        <div class="ef-row ef-header">
-            <div class="ef-col ef-col-name">Name</div>
-            <div class="ef-col ef-col-visibility">Visibility</div>
-            <div class="ef-col ef-col-description">Description</div>
-            <div class="ef-col ef-col-actions">Actions</div>
+        <div class="eventfolio-row ef-header">
+            <div class="eventfolio-col ef-col-name">Name</div>
+            <div class="eventfolio-col ef-col-visibility">Visibility</div>
+            <div class="eventfolio-col ef-col-description">Description</div>
+            <div class="eventfolio-col ef-col-actions">Actions</div>
         </div>
         <?php
     }
@@ -70,7 +70,7 @@ function ef_admin_categories_page()
     ef_admin_nav();
     //ef_style();
 
-    echo '<div class="ef-list">';
+    echo '<div class="eventfolio-list">';
     ef_category_header_row();
     foreach ($categories as $cat)
     {

@@ -1,10 +1,10 @@
-.ef-list {
+.eventfolio-list {
     display: flex;
     flex-direction: column;
     gap: 0;
 }
 
-.ef-row {
+.eventfolio-row {
     display: flex;
     flex-direction: row;
     align-items: stretch;
@@ -13,12 +13,12 @@
     gap: 0.05em;
 }
 
-.ef-header {
+.eventfolio-header {
     font-weight: bold;
     background: rgba(0,0,0,0.1);
 }
 
-.ef-col {
+.eventfolio-col {
     padding: 0;
     margin: 0;
     min-width: 0;
@@ -28,23 +28,23 @@
 }
 
 /* Category columns */
-.ef-col-name        { flex: 1 1 17%; }
-.ef-col-visibility  { flex: 0 1 17%;  text-align: left; }
-.ef-col-description { flex: 2 1 49%; }
-.ef-col-actions     { flex: 0 0 17%;  text-align: right; }
+.eventfolio-col-name        { flex: 1 1 17%; }
+.eventfolio-col-visibility  { flex: 0 1 17%;  text-align: left; }
+.eventfolio-col-description { flex: 2 1 49%; }
+.eventfolio-col-actions     { flex: 0 0 17%;  text-align: right; }
 
 /* User permission columns */
-.ef-col-user         { flex: 1 0 14%; min-width: 90px; }
-.ef-col-username     { flex: 1 0 14%; min-width: 90px; }
-.ef-col-email        { flex: 2 1 22%; min-width: 120px; }
-.ef-col-permissions  { flex: 1 0 14%; min-width: 80px; text-align: center; }
-.ef-col-updated      { flex: 1 0 18%; min-width: 90px; }
+.eventfolio-col-user         { flex: 1 0 14%; min-width: 90px; }
+.eventfolio-col-username     { flex: 1 0 14%; min-width: 90px; }
+.eventfolio-col-email        { flex: 2 1 22%; min-width: 120px; }
+.eventfolio-col-permissions  { flex: 1 0 14%; min-width: 80px; text-align: center; }
+.eventfolio-col-updated      { flex: 1 0 18%; min-width: 90px; }
 /* Actions reused above */
 
 /* Form/input elements in cells */
-.ef-col input[type="text"],
-.ef-col textarea,
-.ef-col select {
+.eventfolio-col input[type="text"],
+.eventfolio-col textarea,
+.eventfolio-col select {
     width: 100% !important;
     padding: 0;
     margin: 0;
@@ -57,7 +57,7 @@
 }
 
 /* Button-as-link styling */
-.ef-btn.ef-btn-save {
+.eventfolio-btn.eventfolio-btn-save {
     background: none;
     border: none;
     color: #2196F3; /* Same as links */
@@ -68,23 +68,23 @@
     cursor: pointer;
     transition: color 0.2s;
 }
-.ef-btn.ef-btn-save:hover,
-.ef-btn.ef-btn-save:focus {
+.eventfolio-btn.eventfolio-btn-save:hover,
+.eventfolio-btn.eventfolio-btn-save:focus {
     color: #1976D2;
     text-decoration: underline;
 }
 
 /* Responsive: stack or scroll if too narrow */
 @media (max-width: 600px) {
-    .ef-list {
+    .eventfolio-list {
         flex-direction: column;
     }
-    .ef-row {
+    .eventfolio-row {
         flex-direction: column;
         height: auto;
         gap: 0;
     }
-    .ef-col {
+    .eventfolio-col {
         width: 100% !important;
         min-width: 0 !important;
         box-sizing: border-box;

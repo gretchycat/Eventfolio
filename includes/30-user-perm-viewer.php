@@ -57,17 +57,17 @@ function ef_user_perm_viewer_row($user_id, $user, $mode = 'view') {
     $role = ef_best_matching_role($user['permissions'], $roles);
     $role_style = ef_role_color($role);
 
-    echo '<div class="ef-row">';
-    echo '<div class="ef-col ef-col-user">'. esc_html($user['display_name']).'</div>';
-    echo '<div class="ef-col" ef-col-username>'. esc_html($user['user_login']).'</div>';
-    echo '<div class="ef-col" ef-col-email>'. esc_html($user['user_email']).'</div>';
-    echo '<div class="ef-col" ef-col-permissions>';
+    echo '<div class="eventfolio-row">';
+    echo '<div class="eventfolio-col ef-col-user">'. esc_html($user['display_name']).'</div>';
+    echo '<div class="eventfolio-col" ef-col-username>'. esc_html($user['user_login']).'</div>';
+    echo '<div class="eventfolio-col" ef-col-email>'. esc_html($user['user_email']).'</div>';
+    echo '<div class="eventfolio-col" ef-col-permissions>';
     echo '<span style="padding:2px 10px; border-radius:12px; font-weight:bold; '.$role_style.'">';
     echo ucfirst($role);
     echo '</span></div>';
-    //echo '<div class="ef-col">'. esc_html($user['permissions']).'</div>';
-    echo '<div class="ef-col" ef-col-updated>'.esc_html($user['updated_at']).'</div>';
-    echo '<div class="ef-col ef-actions"><a href="'. esc_url(add_query_arg(['edit' => $user_id])) .'">Edit</a>';
+    //echo '<div class="eventfolio-col">'. esc_html($user['permissions']).'</div>';
+    echo '<div class="eventfolio-col" ef-col-updated>'.esc_html($user['updated_at']).'</div>';
+    echo '<div class="eventfolio-col ef-actions"><a href="'. esc_url(add_query_arg(['edit' => $user_id])) .'">Edit</a>';
     echo '<a href="'.esc_url(add_query_arg(['reset' => $user_id])).'" onclick="return confirm(\'Reset user permissions for '.esc_attr($user['display_name']).'?\');">Reset</a>';
      echo '</div></div>';
 }

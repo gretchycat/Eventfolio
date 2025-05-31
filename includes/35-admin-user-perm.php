@@ -7,13 +7,13 @@ if (!function_exists('ef_user_perm_header_row'))
 function ef_user_perm_header_row()
     {
     echo <<<EOF
-    <div class="ef-row ef-header">
-        <div class="ef-col ef-col-user">User</div>
-        <div class="ef-col ef-col-username">Username</div>
-        <div class="ef-col ef-col-email"></div>
-        <div class="ef-col ef-col-permissions">Permissions</div>
-        <div class="ef-col ef-col-updated">Updated</div>
-        <div class="ef-col ef-actions">Actions</div>
+    <div class="eventfolio-row ef-header">
+        <div class="eventfolio-col ef-col-user">User</div>
+        <div class="eventfolio-col ef-col-username">Username</div>
+        <div class="eventfolio-col ef-col-email"></div>
+        <div class="eventfolio-col ef-col-permissions">Permissions</div>
+        <div class="eventfolio-col ef-col-updated">Updated</div>
+        <div class="eventfolio-col ef-actions">Actions</div>
     </div>
     EOF;
     }
@@ -71,7 +71,7 @@ function ef_admin_user_permissions_page()
     ef_admin_nav();
 
     echo '<h2>User Permissions</h2>';
-    echo '<div class="ef-list">';
+    echo '<div class="eventfolio-list">';
     ef_user_perm_header_row();
 
     // Show guest row first
