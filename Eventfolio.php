@@ -62,5 +62,11 @@ add_action('admin_menu', function()
     add_submenu_page('eventfolio', 'User Permissions', 'User Permissions', 'manage_options', 'eventfolio_user_permissions', 'ef_admin_user_permissions_page');
 });
 
+function ef_enqueue_admin_css()
+{
+    $css_url = plugins_url('assets/Linkfolio.css', __FILE__);
+    wp_enqueue_style('eventfolio-admin-css', $css_url, [], filemtime(__DIR__ . '/assets/Linkfolio.css'));
+}
+
 add_action('admin_enqueue_scripts', 'ef_enqueue_admin_css');
 

@@ -18,13 +18,6 @@ function ef_admin_nav()
     echo '</div>';
 }
 
-
-function ef_enqueue_admin_css()
-{
-    $css_url = plugins_url('assets/Linkfolio.css', __FILE__);
-    wp_enqueue_style('eventfolio-admin-css', $css_url, [], filemtime(__DIR__ . '/assets/Linkfolio.css'));
-}
-
 function ef_style()
 {
     add_action('admin_enqueue_scripts', 'ef_enqueue_admin_css');
