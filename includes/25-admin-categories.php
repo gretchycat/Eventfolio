@@ -35,7 +35,7 @@ function et_cat_style()
 
 .ef-category-header {
     font-weight: bold;
-    background: rgba(0,0,0,0.06);;
+    background: rgba(0,0,0,0.1);
 }
 
 .ef-category-col {
@@ -61,7 +61,7 @@ function et_cat_style()
     min-width: 60px;
     box-sizing: border-box;
     font-size: inherit;
-    background: rgba(0,0,0,0.06);;
+    background: rgba(0,0,0,0.1);
     border: 1px solid #333;
     border-radius: 4px;
 }
