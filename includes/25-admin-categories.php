@@ -77,7 +77,8 @@ function ef_admin_categories_page()
         if ($editing_id == $cat->id && !$changed)
         {
             ef_category_editor_row($cat, 'edit');
-        } else
+        }
+        else
         {
             ef_category_viewer_row($cat);
         }
@@ -93,10 +94,7 @@ function ef_admin_categories_page()
     if (!$editing_id && !$adding_new) {
         echo '<p><a class="button ef-btn-add" href="' . esc_url(admin_url('admin.php?page=eventfolio_categories&add=1')) . '">Add Category</a></p>';
     }
-
-
     echo '</div>';
-
 
     // JS for live slug generation
     ?>
