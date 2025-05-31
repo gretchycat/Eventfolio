@@ -6,89 +6,14 @@ if (!function_exists('ef_category_header_row')) {
     function ef_category_header_row()
     {
         ?>
-        <div class="ef-category-row ef-category-header">
-            <div class="ef-category-col ef-col-name">Name</div>
-            <div class="ef-category-col ef-col-visibility">Visibility</div>
-            <div class="ef-category-col ef-col-description">Description</div>
-            <div class="ef-category-col ef-col-actions">Actions</div>
+        <div class="ef-row ef-header">
+            <div class="ef-col ef-col-name">Name</div>
+            <div class="ef-col ef-col-visibility">Visibility</div>
+            <div class="ef-col ef-col-description">Description</div>
+            <div class="ef-col ef-col-actions">Actions</div>
         </div>
         <?php
     }
-}
-
-function et_cat_style()
-{
-    echo <<<EOF
-<style>
-.ef-category-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-
-.ef-category-row {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    height: 32px;
-    border-bottom: 1px solid #444;
-}
-
-.ef-category-header {
-    font-weight: bold;
-    background: rgba(0,0,0,0.1);
-}
-
-.ef-category-col {
-    padding: 0;
-    margin: 0;
-    min-width: 0;
-    word-break: break-all;
-    display: flex;
-    align-items: center;
-}
-
-.ef-col-name        { flex: 1 1 17%; }
-.ef-col-visibility  { flex: 0 1 17%;  text-align: left; }
-.ef-col-description { flex: 2 1 49%; }
-.ef-col-actions     { flex: 0 0 17%;  text-align: right; }
-.ef-category-col input[type="text"],
-.ef-category-col textarea,
-
-.ef-category-col select {
-    width: 100% !important;
-    padding: 0;
-    margin: 0;
-    min-width: 60px;
-    box-sizing: border-box;
-    font-size: inherit;
-    background: rgba(0,0,0,0.1);
-    border: 1px solid #333;
-    border-radius: 4px;
-}
-/* Optional: tighten up space between columns if needed */
-.ef-category-row {
-    gap: 0.05em;
-}
-.ef-btn.ef-btn-save {
-    background: none;
-    border: none;
-    color: #2196F3;         /* Same as your links */
-    padding: 0;
-    margin: 0;
-    font: inherit;
-    text-decoration: underline;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.ef-btn.ef-btn-save:hover,
-.ef-btn.ef-btn-save:focus {
-    color: #1976D2;         /* Slightly darker on hover, optional */
-    text-decoration: underline;
-}
-</style>
-EOF;
 }
 
 function ef_admin_categories_page()
@@ -143,9 +68,9 @@ function ef_admin_categories_page()
 
     // --- Render ---
     ef_admin_nav();
-    et_cat_style();
+    et_style();
 
-    echo '<div class="ef-category-list">';
+    echo '<div class="ef-list">';
     ef_category_header_row();
     foreach ($categories as $cat)
     {

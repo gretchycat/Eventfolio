@@ -1,57 +1,5 @@
 <?php
 
-if (!function_exists('ef_admin_shared_styles')) {
-function ef_admin_shared_styles() {
-    echo '<style>
-/* Shared Admin Styles for Eventfolio Plugin */
-.ef-category-list,
-.ef-user-perm-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25em;
-    width: 100%;
-}
-
-.ef-category-row,
-.ef-user-perm-row {
-    display: grid;
-    grid-template-columns: 1.5fr 2fr 1.5fr 3fr 2fr;
-    gap: 0.5em;
-    align-items: center;
-    padding: 0.4em 0.2em;
-    border-bottom: 1px solid #222;
-}
-
-.ef-category-header,
-.ef-user-perm-header {
-    font-weight: bold;
-    background: #111;
-    border-bottom: 2px solid #333;
-}
-
-.ef-category-col,
-.ef-user-perm-col {
-    min-width: 0;
-    overflow-wrap: anywhere;
-}
-
-.ef-category-actions a,
-.ef-user-perm-actions a,
-.ef-user-perm-actions button {
-    margin-right: 0.5em;
-}
-
-@media (max-width: 800px) {
-    .ef-category-row,
-    .ef-user-perm-row {
-        grid-template-columns: 1fr 1fr 1fr;
-        font-size: 0.95em;
-    }
-}
-    </style>';
-}
-}
-
 if (!defined('ABSPATH')) exit;
 
 function ef_admin_user_permissions_page()
@@ -101,12 +49,12 @@ function ef_admin_user_permissions_page()
         $perms_by_id[intval($row->user_id)] = $row;
     }
 
-    ef_admin_shared_styles();
+    et_style();
     // --- Render Admin Nav ---
     ef_admin_nav();
 
     echo '<h2>User Permissions</h2>';
-    echo '<div class="ef-user-perm-list">';
+    echo '<div class="ef-list">';
     ef_user_perm_header_row();
 
     // Show guest row first

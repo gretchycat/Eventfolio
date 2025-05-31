@@ -18,6 +18,80 @@ function ef_admin_nav()
     echo '</div>';
 }
 
+function et_style()
+{
+    echo <<<EOF
+<style>
+.ef-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.ef-row {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    height: 32px;
+    border-bottom: 1px solid #444;
+}
+
+.ef-header {
+    font-weight: bold;
+    background: rgba(0,0,0,0.1);
+}
+
+.ef-col {
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+    word-break: break-all;
+    display: flex;
+    align-items: center;
+}
+
+.ef-col-name        { flex: 1 1 17%; }
+.ef-col-visibility  { flex: 0 1 17%;  text-align: left; }
+.ef-col-description { flex: 2 1 49%; }
+.ef-col-actions     { flex: 0 0 17%;  text-align: right; }
+.ef-col input[type="text"],
+.ef-col textarea,
+
+.ef-col select {
+    width: 100% !important;
+    padding: 0;
+    margin: 0;
+    min-width: 60px;
+    box-sizing: border-box;
+    font-size: inherit;
+    background: rgba(0,0,0,0.1);
+    border: 1px solid #333;
+    border-radius: 4px;
+}
+/* Optional: tighten up space between columns if needed */
+.ef-row {
+    gap: 0.05em;
+}
+.ef-btn.ef-btn-save {
+    background: none;
+    border: none;
+    color: #2196F3;         /* Same as your links */
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.ef-btn.ef-btn-save:hover,
+.ef-btn.ef-btn-save:focus {
+    color: #1976D2;         /* Slightly darker on hover, optional */
+    text-decoration: underline;
+}
+</style>
+EOF;
+}
+
 // Define roles and their canonical permissions
 function ef_get_role_definitions()
 {

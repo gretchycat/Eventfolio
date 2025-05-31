@@ -17,13 +17,13 @@ if (!function_exists('ef_user_perm_header_row'))
 function ef_user_perm_header_row()
     {
     echo <<<EOF
-    <div class="ef-user-perm-row ef-user-perm-header">
-        <div class="ef-user-perm-col">User</div>
-        <div class="ef-user-perm-col">Username</div>
-        <div class="ef-user-perm-col">Email</div>
-        <div class="ef-user-perm-col">Permissions</div>
-        <div class="ef-user-perm-col">Updated</div>
-        <div class="ef-user-perm-col ef-user-perm-actions">Actions</div>
+    <div class="ef-row ef-header">
+        <div class="ef-col">User</div>
+        <div class="ef-col">Username</div>
+        <div class="ef-col">Email</div>
+        <div class="ef-col">Permissions</div>
+        <div class="ef-col">Updated</div>
+        <div class="ef-col ef-actions">Actions</div>
     </div>
     EOF;
     }
@@ -74,17 +74,17 @@ function ef_user_perm_viewer_row($user_id, $user, $mode = 'view') {
     $role = ef_best_matching_role($user['permissions'], $roles);
     $role_style = ef_role_color($role);
 
-    echo '<div class="ef-user-perm-row">';
-    echo '<div class="ef-user-perm-col">'. esc_html($user['display_name']).'</div>';
-    echo '<div class="ef-user-perm-col">'. esc_html($user['user_login']).'</div>';
-    echo '<div class="ef-user-perm-col">'. esc_html($user['user_email']).'</div>';
-    echo '<div class="ef-user-perm-col">';
+    echo '<div class="ef-row">';
+    echo '<div class="ef-col">'. esc_html($user['display_name']).'</div>';
+    echo '<div class="ef-col">'. esc_html($user['user_login']).'</div>';
+    echo '<div class="ef-col">'. esc_html($user['user_email']).'</div>';
+    echo '<div class="ef-col">';
     echo '<span style="padding:2px 10px; border-radius:12px; font-weight:bold; '.$role_style.'">';
     echo ucfirst($role);
     echo '</span></div>';
-    //echo '<div class="ef-user-perm-col">'. esc_html($user['permissions']).'</div>';
-    echo '<div class="ef-user-perm-col">'.esc_html($user['updated_at']).'</div>';
-    echo '<div class="ef-user-perm-col ef-user-perm-actions"><a href="'. esc_url(add_query_arg(['edit' => $user_id])) .'">Edit</a>';
+    //echo '<div class="ef-col">'. esc_html($user['permissions']).'</div>';
+    echo '<div class="ef-col">'.esc_html($user['updated_at']).'</div>';
+    echo '<div class="ef-col ef-actions"><a href="'. esc_url(add_query_arg(['edit' => $user_id])) .'">Edit</a>';
     echo '<a href="'.esc_url(add_query_arg(['reset' => $user_id])).'" onclick="return confirm(\'Reset user permissions for '.esc_attr($user['display_name']).'?\');">Reset</a>';
      echo '</div></div>';
 }
