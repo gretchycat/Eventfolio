@@ -47,10 +47,10 @@ function et_cat_style()
     align-items: center;
 }
 
-.ef-col-name        { flex: 1 1 20%; }
-.ef-col-visibility  { flex: 0 1 20%;  text-align: left; }
-.ef-col-description { flex: 2 1 50%; }
-.ef-col-actions     { flex: 0 0 10%;  text-align: right; }
+.ef-col-name        { flex: 1 1 15%; }
+.ef-col-visibility  { flex: 0 1 15%;  text-align: left; }
+.ef-col-description { flex: 2 1 55%; }
+.ef-col-actions     { flex: 0 0 15%;  text-align: right; }
 .ef-category-col input[type="text"],
 .ef-category-col textarea,
 
