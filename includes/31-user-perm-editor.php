@@ -29,12 +29,13 @@ function ef_user_perm_editor_row($user_id, $user)
         }
     }
 
-    echo '<div class="eventfolio-row eventfolio-row-viewer">';
     echo '<form method="post">';
     ob_start();
     wp_nonce_field('ef_user_perm_form');
     echo ob_get_clean();
-    echo '<div class="eventfolio-col eventfolio-col-username">' . esc_html($user->user_login ?? 'guest') . '</div>';
+    echo '<div class="eventfolio-row eventfolio-row-viewer">';
+    echo '<div class="eventfolio-col eventfolio-col-user">'. esc_html($user['display_name']).'</div>';
+    echo '<div class="eventfolio-col eventfolio-col-username">'. esc_html($user['user_login']).'</div>';
     echo '<div class="eventfolio-col eventfolio-col-permissions">';
     echo '<select name="user_permission_set">';
     foreach ($perm_sets as $role => $perms)
@@ -44,20 +45,16 @@ function ef_user_perm_editor_row($user_id, $user)
             . ($current_role === $role ? ' selected' : '') . '>'
             . esc_html($label) . '</option>';
     }
-    if ($current_role === 'custom')
-    {
-        echo '<option value="custom" selected>Custom</option>';
-    }
     echo '</select>';
     echo '</div>';
-
+    echo '<div class="eventfolio-col eventfolio-col-updated">'.esc_html($user['updated_at']).'</div>';
     echo '<div class="eventfolio-col eventfolio-col-actions">';
     echo '<button type="submit" name="perm_action" value="save" class="eventfolio-link-btn">Save</button>';
     echo '<a href="' . esc_url(admin_url('admin.php?page=eventfolio_user_permissions')) . '" class="eventfolio-link-btn">Cancel</a>';
     echo '</div>';
+    echo '</div>';
     echo '<input type="hidden" name="user_id" value="' . esc_attr($user_id) . '">';
     wp_nonce_field('ef_userperm_editor', 'ef_userperm_nonce');
     echo '</form>';
-    echo '</div>';
 }
 }
