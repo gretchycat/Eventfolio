@@ -29,12 +29,13 @@ function ef_user_perm_editor_row($user_id, $user)
         }
     }
 
-    echo '<div class="eventfolio-row">';
+    echo '<div class="eventfolio-row eventfolio-row-viewer">';
     echo '<form method="post">';
-    echo '<div class="eventfolio-col ef-col-username">' . esc_html($user->user_login ?? 'guest') . '</div>';
-    echo '<div class="eventfolio-col ef-col-email">'   . esc_html($user->user_email ?? '') . '</div>';
-
-    echo '<div class="eventfolio-col ef-col-permissions">';
+    ob_start();
+    wp_nonce_field('ef_user_perm_form');
+    echo ob_get_clean();
+    echo '<div class="eventfolio-col eventfolio-col-username">' . esc_html($user->user_login ?? 'guest') . '</div>';
+    echo '<div class="eventfolio-col eventfolio-col-permissions">';
     echo '<select name="user_permission_set">';
     foreach ($perm_sets as $role => $perms)
     {
@@ -50,11 +51,10 @@ function ef_user_perm_editor_row($user_id, $user)
     echo '</select>';
     echo '</div>';
 
-    echo '<div class="eventfolio-col ef-col-actions">';
+    echo '<div class="eventfolio-col eventfolio-col-actions">';
     echo '<button type="submit" name="perm_action" value="save" class="eventfolio-link-btn">Save</button>';
     echo '<a href="' . esc_url(admin_url('admin.php?page=eventfolio_user_permissions')) . '" class="eventfolio-link-btn">Cancel</a>';
     echo '</div>';
-
     echo '<input type="hidden" name="user_id" value="' . esc_attr($user_id) . '">';
     wp_nonce_field('ef_userperm_editor', 'ef_userperm_nonce');
     echo '</form>';

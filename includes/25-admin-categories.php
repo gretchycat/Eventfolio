@@ -5,14 +5,12 @@ if (!defined('ABSPATH')) exit;
 if (!function_exists('ef_category_header_row')) {
     function ef_category_header_row()
     {
-        ?>
-        <div class="eventfolio-row ef-header">
-            <div class="eventfolio-col ef-col-name">Name</div>
-            <div class="eventfolio-col ef-col-visibility">Visibility</div>
-            <div class="eventfolio-col ef-col-description">Description</div>
-            <div class="eventfolio-col ef-col-actions">Actions</div>
-        </div>
-        <?php
+        echo '<div class="eventfolio-row eventfolio-header">';
+        echo '<div class="eventfolio-col eventfolio-col-name">Name</div>';
+        echo '<div class="eventfolio-col eventfolio-col-visibility">Visibility</div>';
+        echo '<div class="eventfolio-col eventfolio-col-description">Description</div>';
+        echo '<div class="eventfolio-col eventfolio-col-actions">Actions</div>';
+        echo '</div>';
     }
 }
 
@@ -67,7 +65,7 @@ function ef_admin_categories_page()
     $categories = ef_get_categories();
 
     // --- Render ---
-    ef_admin_nav();
+    ef_admin_nav('Categories');
     //ef_style();
 
     echo '<div class="eventfolio-list">';
@@ -94,7 +92,7 @@ function ef_admin_categories_page()
     // Add Category button (shown if not editing or adding)
     if (!$editing_id && !$adding_new)
     {
-        echo '<p><a class="button ef-btn-add" href="' . esc_url(admin_url('admin.php?page=eventfolio_categories&add=1')) . '">Add Category</a></p>';
+        echo '<p><a class="button eventfolio-btn-add" href="' . esc_url(admin_url('admin.php?page=eventfolio_categories&add=1')) . '">Add Category</a></p>';
     }
 
     // JS for live slug generation

@@ -1,7 +1,7 @@
 <?php
 
 // --- Admin navigation ---
-function ef_admin_nav()
+function ef_admin_nav($selected='')
 {
     $pages = [
         'eventfolio'                => 'Info',
@@ -13,7 +13,10 @@ function ef_admin_nav()
     foreach ($pages as $slug => $label)
     {
         $url = admin_url('admin.php?page=' . $slug);
-        echo '<a href="' . esc_url($url) . '" class="button" style="margin-right:0.5em;">' . esc_html($label) . '</a>';
+        $class='ef-admin-nav';
+        if($label == $selected)
+            $class='ef-admin-nav-selected';
+        echo '<a href="' . esc_url($url) . '" class="button '.$class.'" style="margin-right:0.5em;">' . esc_html($label) . '</a>';
     }
     echo '</div>';
 }

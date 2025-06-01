@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) exit;
 // --- Splash/info/settings main page ---
 function ef_admin_info_page()
 {
-    ef_admin_nav();
+    ef_admin_nav('Info');
 
     // Adjust this path as needed if file moves to a subdir
     $readme_path = dirname(dirname(__FILE__)) . '/README.md';

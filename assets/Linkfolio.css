@@ -1,44 +1,15 @@
-.eventfolio-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
+.eventfolio-col input,
+.eventfolio-col select,
+.eventfolio-col textarea {
+    width: 100%;
+    box-sizing: border-box;
 }
-
-.eventfolio-row {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    height: 32px;
-    border-bottom: 1px solid #444;
-    gap: 0.05em;
-}
-
-.eventfolio-header {
-    font-weight: bold;
-    background: rgba(0,0,0,0.1);
-}
-
-.eventfolio-col {
-    padding: 0;
-    margin: 0;
-    min-width: 0;
-    word-break: break-all;
-    display: flex;
-    align-items: center;
-}
-
-/* Category columns */
-.eventfolio-col-name        { flex: 1 1 17%; }
-.eventfolio-col-visibility  { flex: 0 1 17%;  text-align: left; }
-.eventfolio-col-description { flex: 2 1 49%; }
-.eventfolio-col-actions     { flex: 0 0 17%;  text-align: right; }
 
 /* User permission columns */
-.eventfolio-col-user         { flex: 1 0 14%; min-width: 90px; }
-.eventfolio-col-username     { flex: 1 0 14%; min-width: 90px; }
-.eventfolio-col-email        { flex: 2 1 22%; min-width: 120px; }
-.eventfolio-col-permissions  { flex: 1 0 14%; min-width: 80px; text-align: center; }
-.eventfolio-col-updated      { flex: 1 0 18%; min-width: 90px; }
+.eventfolio-col-user         { flex: 1 0 20%; min-width: 90px; }
+.eventfolio-col-username     { flex: 1 0 20%; min-width: 90px; }
+.eventfolio-col-permissions  { flex: 1 0 20%; min-width: 90px; text-align: center; }
+.eventfolio-col-updated      { flex: 1 0 20%; min-width: 90px; }
 /* Actions reused above */
 
 /* Form/input elements in cells */
@@ -74,6 +45,40 @@
     text-decoration: underline;
 }
 
+.ef-admin-nav {
+    display: flex;
+    gap: 0.5em;
+    margin-bottom: 1em;
+    padding: 0.5em 0;
+    background: rgba(0,0,0,0.04);
+    border-radius: 5px;
+}
+
+.ef-admin-nav a {
+    color: #2196F3;
+    text-decoration: none;
+    padding: 0.4em 1em;
+    border-radius: 4px;
+    font-weight: 500;
+    background: transparent;
+    transition: background 0.2s, color 0.2s;
+}
+
+.ef-admin-nav a:hover,
+.ef-admin-nav a:focus {
+    background: #f1f6fb;
+    color: #1565C0;
+}
+
+.ef-admin-nav-selected,
+.ef-admin-nav .ef-admin-nav-selected {
+    background: #2196F3;
+    color: #fff !important;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(33,150,243,0.08);
+    pointer-events: none;
+}
+
 /* Responsive: stack or scroll if too narrow */
 @media (max-width: 600px) {
     .eventfolio-list {
@@ -92,8 +97,41 @@
     }
 }
 
+.eventfolio-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.eventfolio-row {
+    display: flex;
+    flex-direction: row;
+    height: 32px;
+}
+
+.eventfolio-col {
+    flex: 1 1 0;
+    /* Optional: border for debugging */
+    border-bottom: 1px solid #ccc; 
+    display: flex;
+    align-items: center;
+}
+
+.eventfolio-header {
+    font-weight: bold;
+    background: rgba(0,0,0,0.2);
+}
+
+/* If you want different sized columns, override below */
+.eventfolio-col-name        { flex: 1 1 17%; }
+.eventfolio-col-visibility  { flex: 0 1 17%; }
+.eventfolio-col-description { flex: 2 1 49%; }
+.eventfolio-col-actions     { flex: 0 0 17%; }
+
+
+
 /* --- LOADED TEST --- */
-body::after {
+/*body::after {
     content: "Eventfolio CSS loaded";
     display: block;
     color: #fff;
@@ -107,4 +145,5 @@ body::after {
     bottom: 0;
     z-index: 99999;
     pointer-events: none;
-}
+}/**/
+

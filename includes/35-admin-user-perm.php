@@ -7,13 +7,12 @@ if (!function_exists('ef_user_perm_header_row'))
 function ef_user_perm_header_row()
     {
     echo <<<EOF
-    <div class="eventfolio-row ef-header">
-        <div class="eventfolio-col ef-col-user">User</div>
-        <div class="eventfolio-col ef-col-username">Username</div>
-        <div class="eventfolio-col ef-col-email"></div>
-        <div class="eventfolio-col ef-col-permissions">Permissions</div>
-        <div class="eventfolio-col ef-col-updated">Updated</div>
-        <div class="eventfolio-col ef-actions">Actions</div>
+    <div class="eventfolio-row eventfolio-header eventfolio-row-viewer">
+        <div class="eventfolio-col eventfolio-col-user">User</div>
+        <div class="eventfolio-col eventfolio-col-username">Username</div>
+        <div class="eventfolio-col eventfolio-col-permissions">Permissions</div>
+        <div class="eventfolio-col eventfolio-col-updated">Updated</div>
+        <div class="eventfolio-col eventfolio-actions">Actions</div>
     </div>
     EOF;
     }
@@ -68,9 +67,8 @@ function ef_admin_user_permissions_page()
 
     //ef_style();
     // --- Render Admin Nav ---
-    ef_admin_nav();
+    ef_admin_nav('User Permissions');
 
-    echo '<h2>User Permissions</h2>';
     echo '<div class="eventfolio-list">';
     ef_user_perm_header_row();
 
@@ -79,7 +77,6 @@ function ef_admin_user_permissions_page()
         ef_user_perm_viewer_row(0, [
             'display_name' => 'Guest (not logged in)',
             'user_login'   => 'guest',
-            'user_email'   => '',
             'permissions'  => $perms_by_id[0]->permissions,
             'updated_at'   => $perms_by_id[0]->updated_at
         ], $editing_id === 0 ? 'edit' : 'view');
@@ -92,7 +89,6 @@ function ef_admin_user_permissions_page()
         ef_user_perm_viewer_row($uid, [
             'display_name' => $user->display_name ?: $user->user_login,
             'user_login'   => $user->user_login,
-            'user_email'   => $user->user_email,
             'permissions'  => $perms,
             'updated_at'   => $perms_by_id[$uid]->updated_at ?? ''
         ], $editing_id === $uid ? 'edit' : 'view');
