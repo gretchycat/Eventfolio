@@ -115,6 +115,11 @@
     border-bottom: 1px solid #ccc; 
     display: flex;
     align-items: center;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 4px;
 }
 
 .eventfolio-header {
