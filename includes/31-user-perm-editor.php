@@ -9,25 +9,11 @@ function ef_user_perm_editor_row($user_id, $user)
     $current_perm_csv = ef_get_user_permissions($user_id);
 
     // (rest of the function as before...)
-    $perm_sets = ef_get_permission_sets();
+    $perm_sets = ef_get_role_definitions();
 
     // Detect current role by exact permission match
-    $current_role = 'custom';
+    $current_role = ef_best_matching_role($current_perm_csv);
     $perms_array = array_map('trim', explode(',', $current_perm_csv));
-    foreach ($perm_sets as $role => $perms)
-    {
-        // '*' means admin, otherwise check for exact match
-        if ($perms === ['*'] && $perms_array === ['*'])
-        {
-            $current_role = $role;
-            break;
-        }
-        elseif (count($perms) && !array_diff($perms, $perms_array) && !array_diff($perms_array, $perms))
-        {
-            $current_role = $role;
-            break;
-        }
-    }
 
     echo '<form method="post">';
     ob_start();

@@ -292,7 +292,7 @@ function ef_get_all_user_permissions()
 
 function ef_reset_user_permissions($user_id)
 {
-    $roles = ef_get_role_definitions();
+    $roles = ef_get_role_definitions();;
     $activator_id=intval(get_option('eventfolio_activating_admin_user_id'));
     if ($user_id == 0) { // guest
         $perms = $roles['guest'];
@@ -305,6 +305,6 @@ function ef_reset_user_permissions($user_id)
     { // all others
         $perms = ef_get_user_permissions(0);
     }
-    ef_update_user_permissions($user_id, implode(',', $perms));
+    ef_update_user_permissions($user_id, $perms);
 }
 

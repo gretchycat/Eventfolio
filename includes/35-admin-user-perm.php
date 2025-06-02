@@ -27,12 +27,15 @@ function ef_admin_user_permissions_page()
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['perm_action']) && check_admin_referer('ef_user_perm_form'))
     {
         $user_id     = intval($_POST['user_id']);
-        $csv_perms   = sanitize_text_field($_POST['permissions']);
-        $roles = ef_get_role_definitions();
+        $permset=$_POST['user_permission_set'];
+        error_log("..........saving ". $permset);
+        $allperms=ef_get_role_definitions();
+        $perms=$allperms[$permset];
+        $csv_perms   = sanitize_text_field(implode(',', $perms));
         if ($_POST['perm_action'] === 'save' && $user_id >= 0)
         {
-            $role = ef_best_matching_role($csv_perms, $roles);
-            $final_perms = implode(',', $roles[$role]);
+            $role = ef_best_matching_role($csv_perms);
+            $final_perms = implode(',', $allperms[$role]);
             ef_update_user_permissions($user_id, $final_perms);
             $updated=true;
         }

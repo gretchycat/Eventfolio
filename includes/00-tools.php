@@ -72,6 +72,13 @@ function ef_best_matching_role($csv_perms)
             $score=abs(((float)$overlap/(float)$count)-1.0);
             if ($best_role=='')
                 $best_role=$role;
+            error_log('---------');
+            error_log('Testing '.$role);
+            error_log('Counts: ov.'.$overlap.' rl.'.$count);
+            error_log('User: '.implode(',', $user_perms));
+            error_log('Role: '.implode(',', $perms));
+            error_log('Score: '.$score);
+ 
             if ($score <= $best_score)
             {
                 if ($overlap>$common)
@@ -86,38 +93,3 @@ function ef_best_matching_role($csv_perms)
     return $best_role;
 }
 
-function ef_get_permission_sets()
-{
-    static $sets = null;
-    if (is_null($sets))
-    {
-        // This array is your canonical source.
-        // Extend as needed (labels, descriptions, etc.)
-        $sets = [
-            'guest' => [
-                'label' => 'Guest',
-                'permissions' => ['view_teaser'],
-            ],
-            'user' => [
-                'label' => 'Validated User',
-                'permissions' => ['view_event', 'rsvp'],
-            ],
-            'organizer' => [
-                'label' => 'Organizer',
-                'permissions' => [
-                    'view_event',
-                    'rsvp',
-                    'create_event',
-                    'edit_event',
-                    'delete_event',
-                    'manage_categories',
-                ],
-            ],
-            'admin' => [
-                'label' => 'Admin',
-                'permissions' => ['*'],
-            ],
-        ];
-    }
-    return $sets;
-}
