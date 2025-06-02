@@ -65,8 +65,9 @@ if (!function_exists('ef_user_perm_viewer_row'))
         echo '</span></div>';
         //echo '<div class="eventfolio-col">'. esc_html($user['permissions']).'</div>';
         echo '<div class="eventfolio-col eventfolio-col-updated">'.esc_html($user['updated_at']).'</div>';
-        echo '<div class="eventfolio-col eventfolio-actions"><a href="'. esc_url(add_query_arg(['edit' => $user_id])) .'">Edit</a>&nbsp;';
-        echo '<a href="'.esc_url(add_query_arg(['reset' => $user_id])).'" onclick="return confirm(\'Reset user permissions for '.esc_attr($user['display_name']).'?\');">Reset</a>';
+        echo '<div class="eventfolio-col eventfolio-actions">';
+        echo '<a href="'.esc_url(add_query_arg(['user_id' => $user_id, 'perm_action' => 'edit'])) .'">Edit</a>&nbsp;';
+        echo '<a href="'.esc_url(add_query_arg(['user_id' => $user_id, 'perm_action' => 'reset'])) .'">Reset</a>';
         echo '</div></div>';
     }
 }

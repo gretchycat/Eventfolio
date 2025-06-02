@@ -13,7 +13,6 @@ if (!defined('EF_EVENTS_TABLE')) {
 }
 
 // --- Table creation functions ---
-
 function ef_create_events_table()
 {
     $table = EF_EVENTS_TABLE;
@@ -105,7 +104,6 @@ function ef_create_user_permissions_table()
 }
 
 // --- Hooked triggers for user lifecycle ---
-
 add_action('wp_login', function($user_login, $user)
 {
     $table = EF_USER_PERMISSIONS_TABLE;
@@ -128,22 +126,6 @@ add_action('delete_user', function($user_id)
     $wpdb->delete($table, ['user_id' => $user_id]);
 });
 
-// --- Ensure at least one category exists ---
-function ef_ensure_categories_exist()
-{
-    $table = EF_CATEGORIES_TABLE;
-    global $wpdb;
-    $count = $wpdb->get_var("SELECT COUNT(*) FROM $table");
-    if (!$count) {
-        $wpdb->insert($table, [
-            'slug' => 'events',
-            'name' => 'Events',
-            'visibility' => 'public',
-            'description' => ''
-        ]);
-    }
-}
-
 // --- Utility: install all tables ---
 function ef_install_tables()
 {
@@ -155,7 +137,11 @@ function ef_install_tables()
     ef_create_user_permissions_table();
 }
 
-// --- Add an event (basic version) ---
+/**********************************************************/
+/*                                                        */
+/*                    event processing                    */
+/*                                                        */
+/**********************************************************/
 function ef_add_event($args)
 {
     $table = EF_EVENTS_TABLE;
@@ -175,19 +161,25 @@ function ef_add_event($args)
     return $wpdb->insert_id;
 }
 
-// --- Update user permissions ---
-function ef_update_user_permissions($user_id, $permissions_csv)
+/**********************************************************/
+/*                                                        */
+/*                   ucategory processing                 */
+/*                                                        */
+/**********************************************************/
+function ef_ensure_categories_exist()
 {
-    $table = EF_USER_PERMISSIONS_TABLE;
+    $table = EF_CATEGORIES_TABLE;
     global $wpdb;
-    $wpdb->replace($table, [
-        'user_id' => $user_id,
-        'permissions' => $permissions_csv,
-        'updated_at' => current_time('mysql')
-    ]);
+    $count = $wpdb->get_var("SELECT COUNT(*) FROM $table");
+    if (!$count) {
+        $wpdb->insert($table, [
+            'slug' => 'events',
+            'name' => 'Events',
+            'visibility' => 'public',
+            'description' => ''
+        ]);
+    }
 }
-
-// --- Category utility functions ---
 
 function ef_insert_category($slug, $name, $visibility, $description)
 {
@@ -233,7 +225,21 @@ function ef_get_categories()
     return $wpdb->get_results("SELECT * FROM $table ORDER BY name ASC");
 }
 
-// Add to includes/05-db.php
+/**********************************************************/
+/*                                                        */
+/*              user permission processing                */
+/*                                                        */
+/**********************************************************/
+function ef_update_user_permissions($user_id, $permissions_csv)
+{
+    $table = EF_USER_PERMISSIONS_TABLE;
+    global $wpdb;
+    $wpdb->replace($table, [
+        'user_id' => $user_id,
+        'permissions' => $permissions_csv,
+        'updated_at' => current_time('mysql')
+    ]);
+}
 
 function ef_sync_user_permissions_table()
 {
@@ -263,7 +269,6 @@ function ef_sync_user_permissions_table()
 function ef_get_user_permissions($user_id)
 {
     global $wpdb, $ef_user_permissions;
-
     $table = EF_USER_PERMISSIONS_TABLE;
     $row = $wpdb->get_row(
         $wpdb->prepare(
@@ -271,7 +276,6 @@ function ef_get_user_permissions($user_id)
             $user_id
         )
     );
-
     if ($row && isset($row->permissions))
     {
         return $row->permissions;
@@ -279,7 +283,6 @@ function ef_get_user_permissions($user_id)
     return '';
 }
 
-// Get all user permissions (guest + all users)
 function ef_get_all_user_permissions()
 {
     global $wpdb;
@@ -287,17 +290,10 @@ function ef_get_all_user_permissions()
     return $wpdb->get_results("SELECT * FROM $table");
 }
 
-function ef_delete_user_permissions($user_id)
-{
-    global $wpdb;
-    $table = EF_USER_PERMISSIONS_TABLE;
-    return $wpdb->delete($table, ['user_id' => $user_id]);
-}
-
 function ef_reset_user_permissions($user_id)
 {
     $roles = ef_get_role_definitions();
-    $activator_id = intval(get_option('eventfolio_activating_admin_user_id'));
+    $activator_id=intval(get_option('eventfolio_activating_admin_user_id'));
     if ($user_id == 0) { // guest
         $perms = $roles['guest'];
     }
@@ -307,7 +303,7 @@ function ef_reset_user_permissions($user_id)
     }
     else
     { // all others
-        $perms = $roles['guest'];
+        $perms = ef_get_user_permissions(0);
     }
     ef_update_user_permissions($user_id, implode(',', $perms));
 }

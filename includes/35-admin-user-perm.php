@@ -36,23 +36,22 @@ function ef_admin_user_permissions_page()
             ef_update_user_permissions($user_id, $final_perms);
             $updated=true;
         }
-        elseif ($_POST['perm_action'] === 'reset' && $user_id >= 0)
+    }
+    $editing_id=-1;
+    if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['perm_action']))
+    {
+        $user_id = intval($_GET['user_id']);
+        if ($_GET['perm_action'] === 'reset' && $user_id >= 0)
         {
-           ef_reset_user_permissions($user_id);
-        }
-        elseif ($_POST['perm_action'] === 'delete' && $user_id >= 0)
-        {
-            ef_delete_user_permissions($user_id); // only if you want manual delete
+            ef_reset_user_permissions($user_id);
             $updated=true;
         }
-        // Just reload to show updated
+        elseif ($_GET['perm_action'] === 'edit' && $user_id >= 0)
+        {
+            $editing_id=$user_id;
+            $updated=true;
+        }
     }
-    // Handle Edit mode via GET
-    $editing_id=-1;
-    if(!$updated)
-        $editing_id = isset($_GET['edit']) ? intval($_GET['edit']) : -1;
-    $adding_new = isset($_GET['add']) && $editing_id < 0;
-
     // Get all users in WP
     $wp_users = get_users(['fields' => ['ID', 'display_name', 'user_login', 'user_email']]);
     // Get all permissions rows (including guest)
@@ -73,7 +72,8 @@ function ef_admin_user_permissions_page()
     ef_user_perm_header_row();
 
     // Show guest row first
-    if (isset($perms_by_id[0])) {
+    if (isset($perms_by_id[0]))
+    {
         ef_user_perm_viewer_row(0, [
             'display_name' => 'Guest (not logged in)',
             'user_login'   => 'guest',
@@ -83,7 +83,8 @@ function ef_admin_user_permissions_page()
     }
 
     // Show each user row
-    foreach ($wp_users as $user) {
+    foreach ($wp_users as $user)
+    {
         $uid = intval($user->ID);
         $perms = isset($perms_by_id[$uid]) ? $perms_by_id[$uid]->permissions : '';
         ef_user_perm_viewer_row($uid, [

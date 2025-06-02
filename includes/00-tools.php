@@ -42,18 +42,45 @@ function ef_role_priority($role) {
     return $priority[$role] ?? -1;
 }
 
-function ef_best_matching_role($csv_perms, $role_definitions)
+function ef_best_matching_role($csv_perms)
 {
-    $user_perms = array_filter(array_map('trim', explode(',', $csv_perms)));
-    $best_role = 'guest';
-    $max_overlap = 0;
-    foreach ($role_definitions as $role => $perms)
+    $role_definitions=ef_get_role_definitions();
+    $user_perms = explode(',', $csv_perms);
+    $best_role='';
+    if(strlen($csv_perms)==0)
     {
-        $overlap = count(array_intersect($user_perms, $perms));
-        if ($overlap > $max_overlap || ($overlap == $max_overlap && ef_role_priority($role) > ef_role_priority($best_role)))
+        $count=999;
+        foreach ($role_definitions as $role => $perms)
         {
-            $best_role = $role;
-            $max_overlap = $overlap;
+            $rc=count($perms);
+            if ($rc<$count)
+            {
+                $count=$rc;
+                $best_role=$role;
+            }
+        }
+    }
+    else
+    {
+        $best_score=999.0; //0 is best
+        $common=0;
+        foreach ($role_definitions as $role => $perms)
+        {
+            $overlap=count(array_intersect($user_perms, $perms));
+            $count=count($perms);
+            $ucount=count($user_perms);
+            $score=abs(((float)$overlap/(float)$count)-1.0);
+            if ($best_role=='')
+                $best_role=$role;
+            if ($score <= $best_score)
+            {
+                if ($overlap>$common)
+                {
+                    $common=$overlap;
+                    $best_score=$score;
+                    $best_role=$role;
+                }
+            }
         }
     }
     return $best_role;
@@ -62,7 +89,6 @@ function ef_best_matching_role($csv_perms, $role_definitions)
 function ef_get_permission_sets()
 {
     static $sets = null;
-
     if (is_null($sets))
     {
         // This array is your canonical source.
@@ -93,6 +119,5 @@ function ef_get_permission_sets()
             ],
         ];
     }
-
     return $sets;
 }
