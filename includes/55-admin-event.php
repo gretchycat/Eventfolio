@@ -1,7 +1,8 @@
 <?php
 // In 55-admin-event.php (or wherever fits your structure)
 
-if (!function_exists('ef_admin_events_page')) {
+if (!function_exists('ef_admin_events_page'))
+{
 function ef_admin_events_page()
 {
     // You might want your admin nav here
@@ -100,10 +101,10 @@ function ef_admin_events_page()
         ef_admin_events_calendar($selected_category);
     }
 }
+}
 
 function ef_admin_events_list($category, $past, $future, $sort)
 {
-
     // Example fetch (replace with your data source)
     $events = ef_get_events();
 
@@ -119,18 +120,19 @@ function ef_admin_events_list($category, $past, $future, $sort)
     echo    '<div class="eventfolio-col eventfolio-col-actions eventfolio-events-col-actions">Actions</div>';
     echo '</div>';
 
-    if (!empty($events)) {
+    if (!empty($events))
+    {
         foreach ($events as $ev)
         {
             $recur_str = '';
-            if (!empty($ev->recurrence_type)) {
+            if (!empty($ev->recurrence_type))
+            {
                 if ($ev->recurrence_type == 'weekly')
                     $recur_str = "Every {$ev->recurrence_interval} week(s) on " . date('l', strtotime($ev->start_time));
                 elseif ($ev->recurrence_type == 'monthly')
                     $recur_str = "Every month on " . date('jS', strtotime($ev->start_time));
             }
             $exception_str = $ev->parent_event_id ? "Event #{$ev->parent_event_id}" : '';
-
             echo '<div class="eventfolio-row eventfolio-event-row" data-event-id="' . esc_attr($ev->id) . '">';
             echo    '<div class="eventfolio-col eventfolio-col-name eventfolio-events-col-name">' . esc_html($ev->title) . '</div>';
             echo    '<div class="eventfolio-col eventfolio-col-time eventfolio-events-col-time">' . esc_html(date('Y-m-d H:i', strtotime($ev->start_time))) . '</div>';
@@ -142,11 +144,12 @@ function ef_admin_events_list($category, $past, $future, $sort)
             echo    '</div>';
             echo '</div>';
         }
-    } else {
+    }
+    else
+    {
         echo '<div class="eventfolio-row"><div class="eventfolio-col" style="flex: 1;">No events found.</div></div>';
     }
     echo '</div>';
-}
 }
 
 function ef_admin_events_calendar($category)
