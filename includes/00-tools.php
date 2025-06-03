@@ -21,6 +21,30 @@ function ef_admin_nav($selected='')
     echo '</div>';
 }
 
+function ef_request_var($key, $default = null)
+{
+    if (isset($_POST[$key])) return $_POST[$key];
+    if (isset($_GET[$key])) return $_GET[$key];
+    return $default;
+}
+
+function ef_str_to_bool($val)
+{
+    // Normalize and trim input
+    if (is_bool($val)) return $val; // Already a bool
+    $val = strtolower(trim((string)$val));
+    if ($val === '1' || $val === 'true' || $val === 'yes' || $val === 'on')
+    {
+        return true;
+    }
+    if ($val === '0' || $val === 'false' || $val === 'no' || $val === 'off' || $val === '')
+    {
+        return false;
+    }
+    // Fallback: treat any non-empty string as true (PHP default)
+    return (bool) $val;
+}
+
 function ef_style()
 {
     add_action('admin_enqueue_scripts', 'ef_enqueue_admin_css');
@@ -72,13 +96,12 @@ function ef_best_matching_role($csv_perms)
             $score=abs(((float)$overlap/(float)$count)-1.0);
             if ($best_role=='')
                 $best_role=$role;
-            error_log('---------');
+/*            error_log('---------');
             error_log('Testing '.$role);
             error_log('Counts: ov.'.$overlap.' rl.'.$count);
             error_log('User: '.implode(',', $user_perms));
             error_log('Role: '.implode(',', $perms));
-            error_log('Score: '.$score);
- 
+            error_log('Score: '.$score);*/
             if ($score <= $best_score)
             {
                 if ($overlap>$common)

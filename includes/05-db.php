@@ -161,9 +161,80 @@ function ef_add_event($args)
     return $wpdb->insert_id;
 }
 
+// --- EVENTS: Table name ---
+function ef_events_table()
+{
+    global $wpdb;
+    return $wpdb->prefix . 'eventfolio_events';
+}
+
+// --- GET all events ---
+function ef_get_events($args = [])
+{
+    global $wpdb;
+    $table = ef_events_table();
+
+    $where = "WHERE 1=1";
+    $order = "ORDER BY start_time ASC";
+    $limit = "";
+
+    // Optionally add filters, e.g., by category, status, etc.
+    // if (!empty($args['category'])) { ... }
+
+    $sql = "SELECT * FROM $table $where $order $limit";
+    return $wpdb->get_results($sql);
+}
+
+// --- GET single event ---
+function ef_get_event($event_id)
+{
+    global $wpdb;
+    $table = ef_events_table();
+    $sql = $wpdb->prepare("SELECT * FROM $table WHERE id = %d", $event_id);
+    return $wpdb->get_row($sql);
+}
+
+// --- INSERT new event (very basic) ---
+function ef_insert_event($data)
+{
+    global $wpdb;
+    $table = ef_events_table();
+    $defaults = [
+        'title' => '',
+        'description' => '',
+        'start_time' => '',
+        'end_time' => '',
+        'location' => '',
+        'created_by' => get_current_user_id(),
+        'status' => 'draft',
+        'recurrence_type' => '',        // e.g., 'weekly', 'monthly'
+        'recurrence_interval' => 1,     // e.g., 1 for every week/month
+        'parent_event_id' => null,      // for exceptions/overrides
+    ];
+    $data = wp_parse_args($data, $defaults);
+    $wpdb->insert($table, $data);
+    return $wpdb->insert_id;
+}
+
+// --- UPDATE event ---
+function ef_update_event($event_id, $data)
+{
+    global $wpdb;
+    $table = ef_events_table();
+    return $wpdb->update($table, $data, ['id' => $event_id]);
+}
+
+// --- DELETE event ---
+function ef_delete_event($event_id)
+{
+    global $wpdb;
+    $table = ef_events_table();
+    return $wpdb->delete($table, ['id' => $event_id]);
+}
+
 /**********************************************************/
 /*                                                        */
-/*                   ucategory processing                 */
+/*                    category processing                 */
 /*                                                        */
 /**********************************************************/
 function ef_ensure_categories_exist()

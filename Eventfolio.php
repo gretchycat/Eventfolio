@@ -57,9 +57,31 @@ register_activation_hook(__FILE__, function()
 
 add_action('admin_menu', function()
 {
-    add_menu_page('Eventfolio', 'Eventfolio', 'manage_options', 'eventfolio', 'ef_admin_info_page');
-    add_submenu_page('eventfolio', 'Categories', 'Categories', 'manage_options', 'eventfolio_categories', 'ef_admin_categories_page');
-    add_submenu_page('eventfolio', 'User Permissions', 'User Permissions', 'manage_options', 'eventfolio_user_permissions', 'ef_admin_user_permissions_page');
+    add_menu_page('Eventfolio', 'Eventfolio', 'manage_options', 'eventfolio', 'ef_admin_info_page', 'dashicons-calendar-alt');
+    add_submenu_page(
+        'eventfolio',
+        'Events',
+        'Events',
+        'manage_options',
+        'eventfolio_events',
+        'ef_admin_events_page',
+    );
+    add_submenu_page(
+        'eventfolio',
+        'Categories',
+        'Categories',
+        'manage_options',
+        'eventfolio_categories',
+        'ef_admin_categories_page'
+    );
+    add_submenu_page(
+        'eventfolio',
+        'User Permissions',
+        'User Permissions',
+        'manage_options',
+        'eventfolio_user_permissions',
+        'ef_admin_user_permissions_page'
+    );
 });
 
 function ef_enqueue_admin_css()

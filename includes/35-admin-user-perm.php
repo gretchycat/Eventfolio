@@ -28,7 +28,6 @@ function ef_admin_user_permissions_page()
     {
         $user_id     = intval($_POST['user_id']);
         $permset=$_POST['user_permission_set'];
-        error_log("..........saving ". $permset);
         $allperms=ef_get_role_definitions();
         $perms=$allperms[$permset];
         $csv_perms   = sanitize_text_field(implode(',', $perms));
