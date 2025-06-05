@@ -3,7 +3,8 @@
 if (!defined('ABSPATH')) exit;
 
 // --- Table name constants (set only once) ---
-if (!defined('EF_EVENTS_TABLE')) {
+if (!defined('EF_EVENTS_TABLE'))
+{
     global $wpdb;
     define('EF_EVENTS_TABLE',           $wpdb->prefix . 'eventfolio_events');
     define('EF_CATEGORIES_TABLE',       $wpdb->prefix . 'eventfolio_categories');
@@ -28,6 +29,29 @@ function ef_create_events_table()
         created_by bigint(20) unsigned NOT NULL,
         status varchar(32) NOT NULL DEFAULT 'draft',
         teaser text,
+        parent_event_id BIGINT(20) UNSIGNED DEFAULT NULL,
+        location_id BIGINT(20) UNSIGNED DEFAULT NULL,
+        featured_image_id BIGINT(20) UNSIGNED DEFAULT NULL,
+        created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (id)
+    ) $charset_collate;";
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+}
+
+function ef_create_locations_table()
+{
+    global $wpdb;
+    $table = $wpdb->prefix . 'eventfolio_locations';
+    $charset_collate = $wpdb->get_charset_collate();
+    $sql = "CREATE TABLE $table (
+        id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        title varchar(255) NOT NULL,
+        description text,
+        address varchar(255),
+        featured_image_id bigint(20) unsigned DEFAULT NULL,
+        created_by bigint(20) unsigned,
         created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id)
@@ -130,6 +154,7 @@ add_action('delete_user', function($user_id)
 function ef_install_tables()
 {
     ef_create_events_table();
+    ef_create_locations_table();
     ef_create_categories_table();
     ef_ensure_categories_exist();
     ef_create_event_categories_table();
