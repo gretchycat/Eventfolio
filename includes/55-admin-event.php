@@ -110,45 +110,27 @@ function ef_admin_events_list($category, $past, $future, $sort)
 
     echo '<div class="eventfolio-list eventfolio-events-list">';
 
-    // Header row
-    echo '<div class="eventfolio-row eventfolio-header eventfolio-events-header">';
-    echo    '<div class="eventfolio-col eventfolio-col-name eventfolio-events-col-name">Name</div>';
-    echo    '<div class="eventfolio-col eventfolio-col-time eventfolio-events-col-time">Start</div>';
-    echo    '<div class="eventfolio-col eventfolio-col-time eventfolio-events-col-time">End</div>';
-    echo    '<div class="eventfolio-col eventfolio-col-recur eventfolio-events-col-recur">Recurring</div>';
-    echo    '<div class="eventfolio-col eventfolio-col-exception eventfolio-events-col-exception">Exception Of</div>';
-    echo    '<div class="eventfolio-col eventfolio-col-actions eventfolio-events-col-actions">Actions</div>';
-    echo '</div>';
+echo '<div class="eventfolio-row-noheight eventfolio-header eventfolio-events-header">';
+echo    '<div class="eventfolio-col eventfolio-events-col-icon"></div>';   // No label for image/icon
+echo    '<div class="eventfolio-col eventfolio-events-col-main">';
+echo        '<div class="eventfolio-list">';
+echo           '<div class="eventfolio-row">';
+echo                '<div class="eventfolio-events-col-title eventfolio-col">Title</div>';
+echo                '<div class="eventfolio-events-col-location eventfolio-col">Location</div>';
+echo           '</div>';
+echo            '<div class="eventfolio-row">';
+echo                '<div class="eventfolio-events-col-title eventfolio-col">Start</div> ';
+echo                '<div class="eventfolio-events-col-location eventfolio-col">Repeat</div>';
+echo            '</div>';
+echo            '<div class="eventfolio-row">';
+echo               '<div class="eventfolio-events-col-title eventfolio-col">End</div> ';
+echo               '<div class="eventfolio-events-col-location eventfolio-col">Repeat Details</div>';
+echo            '</div>';
+echo        '</div>';
+echo    '</div>';
+echo    '<div class="eventfolio-col eventfolio-events-col-actions">Actions</div>';
+echo '</div>';
 
-    if (!empty($events))
-    {
-        foreach ($events as $ev)
-        {
-            $recur_str = '';
-            if (!empty($ev->recurrence_type))
-            {
-                if ($ev->recurrence_type == 'weekly')
-                    $recur_str = "Every {$ev->recurrence_interval} week(s) on " . date('l', strtotime($ev->start_time));
-                elseif ($ev->recurrence_type == 'monthly')
-                    $recur_str = "Every month on " . date('jS', strtotime($ev->start_time));
-            }
-            $exception_str = $ev->parent_event_id ? "Event #{$ev->parent_event_id}" : '';
-            echo '<div class="eventfolio-row eventfolio-event-row" data-event-id="' . esc_attr($ev->id) . '">';
-            echo    '<div class="eventfolio-col eventfolio-col-name eventfolio-events-col-name">' . esc_html($ev->title) . '</div>';
-            echo    '<div class="eventfolio-col eventfolio-col-time eventfolio-events-col-time">' . esc_html(date('Y-m-d H:i', strtotime($ev->start_time))) . '</div>';
-            echo    '<div class="eventfolio-col eventfolio-col-recur eventfolio-events-col-recur">' . esc_html($recur_str) . '</div>';
-            echo    '<div class="eventfolio-col eventfolio-col-exception eventfolio-events-col-exception">' . esc_html($exception_str) . '</div>';
-            echo    '<div class="eventfolio-col eventfolio-col-actions eventfolio-events-col-actions">';
-            echo        '<a href="?page=eventfolio_events&edit=' . esc_attr($ev->id) . '" class="eventfolio-btn eventfolio-btn-edit">Edit</a> ';
-            echo        '<a href="?page=eventfolio_events&delete=' . esc_attr($ev->id) . '" class="eventfolio-btn eventfolio-btn-delete" onclick="return confirm(\'Are you sure?\');">Delete</a>';
-            echo    '</div>';
-            echo '</div>';
-        }
-    }
-    else
-    {
-        echo '<div class="eventfolio-row"><div class="eventfolio-col" style="flex: 1;">No events found.</div></div>';
-    }
     echo '</div>';
 }
 

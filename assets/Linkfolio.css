@@ -110,6 +110,12 @@
     width: 100%;
 }
 
+.eventfolio-row-noheight {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
 .eventfolio-col {
     flex: 1 1 0;
     /* Optional: border for debugging */
@@ -184,6 +190,15 @@
 .eventfolio-col-description { flex: 2 1 49%; }
 .eventfolio-col-actions     { flex: 0 0 17%; }
 
+/* If you want different sized columns, override below */
+.eventfolio-events-col-icon        { flex: 1 0 10%; }
+.eventfolio-events-col-main        { flex: 4 0 80%; }
+.eventfolio-events-col-actions     { flex: 1 0 10%; }
+.eventfolio-events-col-title       { flex: 1 0 50%; min-width:200px; }
+.eventfolio-events-col-location    { flex: 1 0 50%; min-width:200px; }
+.
+
+
 .eventfolio-btn {
     background: none;
     border: none;
@@ -219,6 +234,84 @@
 .eventfolio-toggle-btn:not(.active):hover {
     background: #333;
     color: #fff;
+}
+
+/* Event List View Columns */
+.eventfolio-col-image {
+    flex: 0 0 48px;
+    width: 48px;
+    min-width: 48px;
+    max-width: 48px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    padding: 0;
+}
+.eventfolio-col-main {
+    flex: 2 1 60%;
+    min-width: 160px;
+    padding-left: 12px;
+    padding-right: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    overflow: hidden;
+}
+.eventfolio-col-actions {
+    flex: 0 0 120px;
+    min-width: 80px;
+    max-width:200px;
+    justify-content: flex-end;
+    align-items: start;
+    display: flex;
+}
+
+/* Nested content for event main cell */
+.eventfolio-event-header-top {
+    font-size: 1.06em;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 10px;
+    white-space: nowrap;
+}
+.eventfolio-event-header-second,
+.eventfolio-event-header-third {
+    font-size: 0.98em;
+    color: #666;
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Responsive for mobile: stack everything */
+@media (max-width: 700px) {
+    .eventfolio-row, .eventfolio-header {
+        flex-direction: column;
+        min-height: unset;
+    }
+    .eventfolio-col-main,
+    .eventfolio-col-image,
+    .eventfolio-col-actions {
+        max-width: unset;
+        min-width: 0;
+        width: 100%;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+    .eventfolio-event-header-top,
+    .eventfolio-event-header-second,
+    .eventfolio-event-header-third {
+        flex-direction: column;
+        gap: 2px;
+    }
 }
 
 /* --- LOADED TEST --- */
