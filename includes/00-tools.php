@@ -116,3 +116,19 @@ function ef_best_matching_role($csv_perms)
     return $best_role;
 }
 
+function template_render($template_file, $vars = array())
+{
+    $template_path = plugin_dir_path(__FILE__) . 'templates/' . $template_file;
+    if (!file_exists($template_path)) {
+        error_log( "<!-- Template $template_path not found -->");
+        return "<!-- Template $template_file not found -->";
+    }
+    $template = file_get_contents($template_path);
+
+    // Replace placeholders like __VARNAME__ with the variable's value
+    foreach ($vars as $key => $value) {
+        $template = str_replace('__' . strtoupper($key) . '__', $value, $template);
+    }
+
+    return $template;
+}

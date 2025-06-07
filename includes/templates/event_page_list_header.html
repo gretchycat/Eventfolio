@@ -1,0 +1,33 @@
+<div class="eventfolio-event-controls">
+    <!-- Past/Future Checkboxes -->
+    <div class="eventfolio-category-form">
+        <form method="get" action="" style="display: flex; align-items: center; gap: 12px; margin: 0;">
+            <input type="hidden" name="page" value="eventfolio_events">
+            <input type="hidden" name="mode" value="__MODE__">
+            <input type="hidden" name="sort" value="__SORT__">
+            <input type="hidden" name="category" value="__SELECTED_CATEGORY__">
+            <label style="display: flex; align-items: center; gap: 4px;">
+                <input type="checkbox" name="past" value="true" __PAST_CHECKED__ onchange="this.form.submit()">
+                Past
+            </label>
+            <label style="display: flex; align-items: center; gap: 4px;">
+                <input type="checkbox" name="future" value="true" __FUTURE_CHECKED__ onchange="this.form.submit()">
+                Future
+            </label>
+        </form>
+    </div>
+    <!-- Sort Order Toggle -->
+    <div class="eventfolio-category-form">
+        <form method="get" action="" style="display: flex; align-items: center; gap: 10px; margin: 0;">
+            <input type="hidden" name="page" value="eventfolio_events">
+            <input type="hidden" name="mode" value="__MODE__">
+            <input type="hidden" name="category" value="__SELECTED_CATEGORY__">
+            <input type="hidden" name="past" value="__PAST_VALUE__">
+            <input type="hidden" name="future" value="__FUTURE_VALUE__">
+            <button type="submit" name="sort" value="__NEXT_SORT__"
+                style="background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 3px; font-size: 15px;">
+                __SORT_ICON____SORT_LABEL__
+            </button>
+        </form>
+    </div>
+</div>

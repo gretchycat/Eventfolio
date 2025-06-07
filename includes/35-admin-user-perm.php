@@ -12,7 +12,7 @@ function ef_user_perm_header_row()
         <div class="eventfolio-col eventfolio-col-username">Username</div>
         <div class="eventfolio-col eventfolio-col-permissions">Permissions</div>
         <div class="eventfolio-col eventfolio-col-updated">Updated</div>
-        <div class="eventfolio-col eventfolio-actions">Actions</div>
+        <div class="eventfolio-col eventfolio-actions"></div>
     </div>
     EOF;
     }

@@ -12,6 +12,24 @@
 .eventfolio-col-updated      { flex: 1 0 20%; min-width: 90px; }
 /* Actions reused above */
 
+/* If you want different sized columns, override below */
+.eventfolio-col-name        { flex: 1 1 17%; }
+.eventfolio-col-visibility  { flex: 0 1 17%; }
+.eventfolio-col-description { flex: 2 1 49%; }
+.eventfolio-col-actions     { flex: 0 0 17%; }
+
+.eventfolio-col-event-list-icon   { flex: 0 1 25%; }
+.eventfolio-col-event-list-main   { flex: 2 1 50%; }
+.eventfolio-col-event-list-action { flex: 0 0 25%; }
+
+
+.eventfolio-col-event-list-title       { flex: 0 1 50%; }
+.eventfolio-col-event-list-location    { flex: 0 1 50%; }
+.eventfolio-col-event-list-start       { flex: 0 1 50%; }
+.eventfolio-col-event-list-end         { flex: 0 1 50%; }
+.eventfolio-col-event-list-recur       { flex: 0 1 50%; }
+.eventfolio-col-event-list-recurdetail { flex: 0 1 50%; }
+
 /* Form/input elements in cells */
 .eventfolio-col input[type="text"],
 .eventfolio-col textarea,
@@ -110,9 +128,15 @@
     width: 100%;
 }
 
+.eventfolio-row-noheight {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+}
+
 .eventfolio-col {
     flex: 1 1 0;
-    /* Optional: border for debugging */
     border-bottom: 1px solid #ccc;
     display: flex;
     align-items: center;
@@ -121,6 +145,28 @@
     overflow: hidden;
     text-overflow: ellipsis;
     padding-left: 4px;
+    padding-right 4px;
+    padding-bottom 4px;
+}
+
+.eventfolio-plain-col {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left 4px;
+    padding-right 4px;
+    padding-bottom 4px;
+}
+
+.eventfolio-event-col {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    margin-bottom: 1em;
+    padding-right: 4px;
 }
 
 .eventfolio-event-controls {
@@ -153,36 +199,10 @@
     box-sizing: border-box;
 }
 
-.eventfolio-plain-col {
-    /* Optional: border for debugging */
-    display: flex;
-    align-items: center;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding-left 4px;
-    padding-right 4px;
-    padding-bottom 4px;
-}
-
-.eventfolio-event-col {
-    display: flex;
-    gap: 1em;
-    align-items: center;
-    margin-bottom: 1em;
-    padding-right: 4px;
-}
 .eventfolio-header {
     font-weight: bold;
     background: rgba(0,0,0,0.2);
 }
-
-/* If you want different sized columns, override below */
-.eventfolio-col-name        { flex: 1 1 17%; }
-.eventfolio-col-visibility  { flex: 0 1 17%; }
-.eventfolio-col-description { flex: 2 1 49%; }
-.eventfolio-col-actions     { flex: 0 0 17%; }
 
 .eventfolio-btn {
     background: none;
@@ -221,6 +241,38 @@
     color: #fff;
 }
 
+.eventfolio-btn-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    background: transparent;
+    border: 1.5px solid #2196F3;
+    color: #2196F3;
+    border-radius: 7px;
+    font-weight: 500;
+    font-size: 1em;
+    padding: 0.4em 1em 0.4em 0.9em;
+    margin-bottom: 0.5em;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s, border 0.15s;
+    cursor: pointer;
+    outline: none;
+}
+
+.eventfolio-btn-add:hover,
+.eventfolio-btn-add:focus {
+    background: #2196F3;
+    color: #fff;
+    border-color: #1976D2;
+    text-decoration: none;
+}
+
+.eventfolio-btn-add .dashicons {
+    font-size: 1.1em;
+    margin-right: 0.2em;
+    line-height: 1;
+}
+
 /* --- LOADED TEST --- */
 /*body::after {
     content: "Eventfolio CSS loaded";
@@ -237,4 +289,5 @@
     z-index: 99999;
     pointer-events: none;
 }/**/
+
 

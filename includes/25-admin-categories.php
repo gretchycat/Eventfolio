@@ -9,7 +9,7 @@ if (!function_exists('ef_category_header_row')) {
         echo '<div class="eventfolio-col eventfolio-col-name">Name</div>';
         echo '<div class="eventfolio-col eventfolio-col-visibility">Visibility</div>';
         echo '<div class="eventfolio-col eventfolio-col-description">Description</div>';
-        echo '<div class="eventfolio-col eventfolio-col-actions">Actions</div>';
+        echo '<div class="eventfolio-col eventfolio-col-actions"></div>';
         echo '</div>';
     }
 }
