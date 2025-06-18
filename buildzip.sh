@@ -7,7 +7,7 @@ echo "Linting all PHP files recursively..."
 ERROR=0
 for f in $(find . -name "*.php"); do
     echo "Linting $f"
-    if ! php -l "$f"; then
+    if ! php -l "$f" ; then
         ERROR=1
     fi
 done

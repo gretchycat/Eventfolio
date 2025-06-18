@@ -31,13 +31,13 @@
 .eventfolio-col-event-list-recurdetail { flex: 0 1 50%; }
 
 /* Form/input elements in cells */
-.eventfolio-col input[type="text"],
+.eventfolio-col input/*[type="text"]*/,
 .eventfolio-col textarea,
 .eventfolio-col select {
     width: 100% !important;
     padding: 0;
     margin: 0;
-    min-width: 60px;
+   /* min-width: 60px;*/
     box-sizing: border-box;
     font-size: inherit;
     background: rgba(0,0,0,0.1);
@@ -135,6 +135,13 @@
     border-bottom: 1px solid #ccc;
 }
 
+.eventfolio-row-noheight-noline {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    border: none !important;
+}
+
 .eventfolio-col {
     flex: 1 1 0;
     border-bottom: 1px solid #ccc;
@@ -169,6 +176,17 @@
     padding-right: 4px;
 }
 
+.eventfolio-col-title-full {
+    flex: 1 1 100%;
+    width: 100%;
+    margin-top: 8px; /* optional: spacing above */
+}
+
+.eventfolio-col-description-full {
+    flex: 1 1 100%;
+    width: 100%;
+    margin-top: 8px; /* optional: spacing above */
+}
 .eventfolio-event-controls {
     display: flex;
     align-items: center;
@@ -177,8 +195,6 @@
 }
 
 .eventfolio-category-form {
-    margin-bottom: 0;
-    width: 50%;
 }
 
 .eventfolio-mode-form {
@@ -272,6 +288,31 @@
     margin-right: 0.2em;
     line-height: 1;
 }
+.eventfolio-image-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4em;
+}
+.eventfolio-image-picker img {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #bbb;
+    background: #eee;
+}
+.eventfolio-image-text {
+    color: #2196F3;
+    font-size: 0.93em;
+    cursor: pointer;
+    text-decoration: underline dotted;
+    margin-top: 0.3em;
+}
+.eventfolio-image-trigger:hover .eventfolio-image-text {
+    color: #1976D2;
+}
+
 
 /* --- LOADED TEST --- */
 /*body::after {

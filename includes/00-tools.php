@@ -7,7 +7,8 @@ function ef_admin_nav($selected='')
         'eventfolio'                => 'Info',
         'eventfolio_events'         => 'Events',
         'eventfolio_categories'     => 'Categories',
-        'eventfolio_user_permissions'    => 'User Permissions'
+        'eventfolio_locations' => 'Locations',
+        'eventfolio_user_permissions'    => 'User Permissions',
     ];
     echo '<div class="ef-admin-nav" style="margin-bottom:1em;">';
     foreach ($pages as $slug => $label)

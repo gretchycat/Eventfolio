@@ -76,6 +76,14 @@ add_action('admin_menu', function()
     );
     add_submenu_page(
         'eventfolio',
+        'Locations',
+        'Locations',
+        'manage_options',
+        'eventfolio_locations',
+        'ef_admin_locations_page'
+    );
+    add_submenu_page(
+        'eventfolio',
         'User Permissions',
         'User Permissions',
         'manage_options',

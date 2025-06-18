@@ -11,6 +11,7 @@ if (!defined('EF_EVENTS_TABLE'))
     define('EF_EVENT_CATEGORIES_TABLE', $wpdb->prefix . 'eventfolio_event_categories');
     define('EF_SIGNUPS_TABLE',          $wpdb->prefix . 'eventfolio_signups');
     define('EF_USER_PERMISSIONS_TABLE', $wpdb->prefix . 'eventfolio_user_permissions');
+    define('EF_LOCATIONS_TABLE',        $wpdb->prefix . 'eventfolio_locations');
 }
 
 // --- Table creation functions ---
@@ -25,6 +26,7 @@ function ef_create_events_table()
         description text,
         start_time datetime NOT NULL,
         end_time datetime NOT NULL,
+        recurrence_type varchar(255),
         location varchar(255),
         created_by bigint(20) unsigned NOT NULL,
         status varchar(32) NOT NULL DEFAULT 'draft',
@@ -43,15 +45,18 @@ function ef_create_events_table()
 function ef_create_locations_table()
 {
     global $wpdb;
-    $table = $wpdb->prefix . 'eventfolio_locations';
+    $table_name = EF_LOCATIONS_TABLE;
     $charset_collate = $wpdb->get_charset_collate();
-    $sql = "CREATE TABLE $table (
+    $sql = "CREATE TABLE $table_name (
         id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-        title varchar(255) NOT NULL,
+        slug varchar(128) NOT NULL UNIQUE,
+        name varchar(255) NOT NULL,
+        category varchar(128) NOT NULL,
         description text,
-        address varchar(255),
-        featured_image_id bigint(20) unsigned DEFAULT NULL,
-        created_by bigint(20) unsigned,
+        address text,
+        url varchar(255),
+        image_url varchar(255),
+        created_by bigint(20) unsigned NOT NULL,
         created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id)
@@ -233,7 +238,7 @@ function ef_insert_event($data)
         'created_by' => get_current_user_id(),
         'status' => 'draft',
         'recurrence_type' => '',        // e.g., 'weekly', 'monthly'
-        'recurrence_interval' => 1,     // e.g., 1 for every week/month
+        //'recurrence_interval' => 1,     // e.g., 1 for every week/month
         'parent_event_id' => null,      // for exceptions/overrides
     ];
     $data = wp_parse_args($data, $defaults);
@@ -320,6 +325,12 @@ function ef_get_categories()
     global $wpdb;
     return $wpdb->get_results("SELECT * FROM $table ORDER BY name ASC");
 }
+function ef_get_category_by_slug($slug)
+{
+    global $wpdb;
+    $table = EF_CATEGORIES_TABLE;
+    return $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE slug = %s", $slug));
+}
 
 /**********************************************************/
 /*                                                        */
@@ -402,5 +413,121 @@ function ef_reset_user_permissions($user_id)
         $perms = ef_get_user_permissions(0);
     }
     ef_update_user_permissions($user_id, $perms);
+}
+
+/**********************************************************/
+/*                                                        */
+/*              u     location processing                 */
+/*                                                        */
+/**********************************************************/
+
+function ef_insert_location($slug, $name, $category, $description, $address, $url, $image_url, $created_by)
+{
+    global $wpdb;
+    $table = EF_LOCATIONS_TABLE;
+
+    $wpdb->insert(
+        $table,
+        [
+            'slug'        => $slug,
+            'name'        => $name,
+            'category'    => $category,
+            'description' => $description,
+            'address'     => $address,
+            'url'         => $url,
+            'image_url'   => $image_url,
+            'created_by'  => $created_by,
+            'created_at'  => current_time('mysql'),
+            'updated_at'  => current_time('mysql'),
+        ],
+        [
+            '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s'
+        ]
+    );
+    return $wpdb->insert_id;
+}
+
+function ef_update_location($id, $fields)
+{
+    global $wpdb;
+    $table = EF_LOCATIONS_TABLE;
+
+    // Only allow known columns
+    $allowed = ['slug','name','category','description','address','url','image_url','updated_at'];
+    $data = [];
+    foreach ($fields as $k => $v) {
+        if (in_array($k, $allowed)) $data[$k] = $v;
+    }
+    if (!$data) return false;
+
+    $data['updated_at'] = current_time('mysql');
+
+    return $wpdb->update(
+        $table,
+        $data,
+        ['id' => $id]
+    );
+}
+
+function ef_delete_location($id)
+{
+    global $wpdb;
+    $table = EF_LOCATIONS_TABLE;
+    return $wpdb->delete($table, ['id' => $id]);
+}
+
+function ef_get_location($id)
+{
+    global $wpdb;
+    $table = EF_LOCATIONS_TABLE;
+    return $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE id = %d", $id));
+}
+
+function ef_get_locations($category = null)
+{
+    global $wpdb;
+    $table = EF_LOCATIONS_TABLE;
+    $where = '';
+    $params = [];
+    if ($category) {
+        $where = "WHERE category = %s";
+        $params[] = $category;
+    }
+    return $wpdb->get_results($wpdb->prepare("SELECT * FROM $table $where ORDER BY name ASC", ...$params));
+}
+
+function ef_get_location_by_slug($slug)
+{
+    global $wpdb;
+    $table = EF_LOCATIONS_TABLE;
+    return $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE slug = %s", $slug));
+}
+
+function eventfolio_generate_map_url($location)
+{
+    // $location can be a DB row (object) or associative array
+    $address = '';
+    if (is_object($location)) {
+        $address = $location->address ?: $location->name;
+    } elseif (is_array($location)) {
+        $address = $location['address'] ?: $location['name'];
+    }
+    if (!$address) return '';
+    $query = urlencode($address);
+    return "https://www.google.com/maps/search/?api=1&query={$query}";
+}
+
+function eventfolio_generate_osm_url($location)
+{
+    // Accepts object (row) or array
+    $address = '';
+    if (is_object($location)) {
+        $address = $location->address ?: $location->name;
+    } elseif (is_array($location)) {
+        $address = $location['address'] ?: $location['name'];
+    }
+    if (!$address) return '';
+    $query = urlencode($address);
+    return "https://www.openstreetmap.org/search?query={$query}";
 }
 
