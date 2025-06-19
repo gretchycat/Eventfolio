@@ -30,17 +30,16 @@ if (!function_exists('ef_admin_events_page'))
         if($action=='save')
         {
             $event_id = ef_request_var('event_id', '');
-            print_r($_POST);
             $data = [
-                'title' => $_POST['title'],
+                'title'       => $_POST['title'],
                 'description' => $_POST['description'],
-                'location' => $_POST['location'],
-                'start_time' => $_POST['start_date'].' '.$_POST['start_time'],
+                'category'    => $_POST['category'],
+                'location'    => $_POST['location'],
+                'start_time'=> $_POST['start_date'].' '.$_POST['start_time'],
                 'end_time' =>  $_POST['start_date'].' '.$_POST['end_time'],
                 'recurrence_type' => $_POST['recurrence'],
                 'parent_event_id' => null,  // for exceptions/overrides
             ];
-
             if($event_id=='new')
             {
                 ef_insert_event($data);
@@ -69,17 +68,16 @@ if (!function_exists('ef_admin_events_page'))
                     'past'     => $past ? 'true' : 'false',
                     'future'   => $future ? 'true' : 'false',
                 ], admin_url('admin.php'));
-            $pub_selected= ' selected';
-            $pri_selected='';
-            $rec_options  =  '<option value="" selected>Single</option>';
-            $rec_options .=  '<option value="weekly">Weekly</option>';
-            $rec_options .=  '<option value="monthly">Monthly</option>';
-            $rec_options .=  '<option value="yearly">Yearly</option>';
             $loc_options  =  '<option value="" >To be Determined</option>';
             $locations = ef_get_locations($selected_category);
             $row=array();
             if (intval($event_id)>0)
+            {
                 $row=ef_get_event(intval($event_id));
+                $click = ef_str_to_bool(ef_request_var('click', 'false'));
+                if($click)
+                    $selected_category=$row->category;
+            }
             else
                 $row=(object)array(
                     'title'=>'',
@@ -87,17 +85,42 @@ if (!function_exists('ef_admin_events_page'))
                     'start_time'=>date("Y-m-d H:i:s", time()),
                     'end_time'=>date("Y-m-d H:i:s", time()+3600),
                     'description'=>'',
+                    'recurrence_type' => '',
+                    'category'=>$selected_category,
                     );
+            $cat_options='';
+            foreach ($categories as $cat)
+            {
+                $sel = $selected_category == $cat->slug ? 'selected' : '';
+                $cat_options .= '<option value="' . esc_attr($cat->slug) . '" ' . $sel . '>' . esc_html($cat->name) . '</option>';
+            }
             $location=ef_request_var('location', $row->location);
             foreach ($locations as $loc)
             {
                 $sel = $location == $loc->slug ? 'selected' : '';
                 $loc_options .= '<option value="' . esc_attr($loc->slug) . '" ' . $sel . '>' . esc_html($loc->name) . '</option>';
             }
+            $recurrence=ef_request_var('recurrence', $row->recurrence_type);
+            $recur=array(
+                    'Single' => '',
+                    'Weekly' => 'weekly',
+                    'Monthly'=> 'monthly',
+                    'Yearly' => 'yearly',
+                    );
+            $rec_options='';
+            foreach($recur as $name=>$value)
+            {
+                $sel='';
+                if($recurrence==$value)
+                    $sel='selected';
+                $rec_options .= '<option value="'.$value.'" '.$sel.'>'.$name.'</option>';
+            }
             $start_date = date('Y-m-d', strtotime($row->start_time));
             $start_time = date('H:i', strtotime($row->start_time));
             $end_time   = date('H:i', strtotime($row->end_time));
-
+            $humanized='';
+            if ($recurrence)
+                $humanized= ef_recurrence_human(ef_request_var('start_date', $start_date), $recurrence);
             echo template_render('event_edit_page.html', array(
                 'MODE'               => $mode,
                 'SORT'               => $sort,
@@ -115,6 +138,8 @@ if (!function_exists('ef_admin_events_page'))
                 'DATE'               => ef_request_var('start_date', $start_date),
                 'START_TIME'         => ef_request_var('start_time', $start_time),
                 'END_TIME'           => ef_request_var('end_time', $end_time),
+                'HUMANIZED'          => $humanized,
+
                 ));
         }
         else
@@ -186,20 +211,41 @@ function ef_admin_events_list($category, $past, $future, $sort)
         'ICON' => '',
         'TITLE' => 'Title',
         'LOCATION' => 'Location',
+        'DATE' => 'Date',
         'START' => 'Start',
         'END' => 'End',
         'RECURRING' => 'Recurring',
-        'RECURRING_DETAILS' => 'Recurring Details',
         'ACTIONS' => '',
         'HEADER' => 'eventfolio-header',
     ));
 
-    $events = ef_get_events();
+    $events = ef_get_events($category, $past, $future, $sort);
     if (!empty($events))
     {
         foreach ($events as $row)
         {
-            ef_event_viewer_row($row);
+            $edit_url = add_query_arg([
+                'page'     => 'eventfolio_events',
+                'event_id' => $row->id,
+                'action'   => 'edit',
+                'click'    => 'true',
+                'category' => $category ?? '',
+                'mode'     => $mode,
+                'sort'     => $sort,
+                'past'     => $past ? 'true' : 'false',
+                'future'   => $future ? 'true' : 'false',
+                ], admin_url('admin.php'));
+            $delete_url = add_query_arg([
+                'page'     => 'eventfolio_events',
+                'event_id' => $row->id,
+                'action'   => 'delete',
+                'category' => $category ?? '',
+                'mode'     => $mode,
+                'sort'     => $sort,
+                'past'     => $past ? 'true' : 'false',
+                'future'   => $future ? 'true' : 'false',
+                ], admin_url('admin.php'));
+            ef_event_viewer_row($row, $edit_url, $delete_url);
         }
     }
     else

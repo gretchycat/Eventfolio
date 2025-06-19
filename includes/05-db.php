@@ -27,6 +27,7 @@ function ef_create_events_table()
         start_time datetime NOT NULL,
         end_time datetime NOT NULL,
         recurrence_type varchar(255),
+        category varchar(255),
         location varchar(255),
         created_by bigint(20) unsigned NOT NULL,
         status varchar(32) NOT NULL DEFAULT 'draft',
@@ -199,7 +200,7 @@ function ef_events_table()
 }
 
 // --- GET all events ---
-function ef_get_events($args = [])
+function ef_get_events_old($args = [])
 {
     global $wpdb;
     $table = ef_events_table();
@@ -212,6 +213,39 @@ function ef_get_events($args = [])
     // if (!empty($args['category'])) { ... }
 
     $sql = "SELECT * FROM $table $where $order $limit";
+    return $wpdb->get_results($sql);
+}
+
+function ef_get_events($category = '', $past = true, $future = true, $sort = 'a')
+{
+    global $wpdb;
+    $events_table = $wpdb->prefix . 'eventfolio_events';
+    $where = [];
+    $order = ($sort === 'd') ? 'DESC' : 'ASC';
+    $now = current_time('mysql');
+    // Category filter (by slug)
+    if (!empty($category))
+    {
+        $where[] = $wpdb->prepare("category = %s", $category);
+    }
+    // Past/future filtering
+    // Always include recurring events (non-empty 'recurring')
+    if ($past && !$future)
+    {
+        $where[] = "(end_time < '$now' OR recurrence_type != '')";
+    }
+    elseif (!$past && $future)
+    {
+        $where[] = "(end_time >= '$now' OR recurrence_type != '')";
+    }
+    // If both are true, include all (no filter needed)
+    // Where clause
+    $where_sql = '';
+    if (!empty($where))
+    {
+        $where_sql = 'WHERE ' . implode(' AND ', $where);
+    }
+    $sql = "SELECT * FROM $events_table $where_sql ORDER BY start_time $order";
     return $wpdb->get_results($sql);
 }
 
@@ -235,6 +269,7 @@ function ef_insert_event($data)
         'start_time' => '',
         'end_time' => '',
         'location' => '',
+        'category' => '',
         'created_by' => get_current_user_id(),
         'status' => 'draft',
         'recurrence_type' => '',        // e.g., 'weekly', 'monthly'

@@ -40,19 +40,19 @@
     </div>
     <div class="eventfolio-row-noheight-noline eventfolio-row-form">
         <div class="eventfolio-col eventfolio-col-date">
-            <label style="width:100%">Start Date<br><input type="date" name="start_date" value="__DATE__" required style="width:100%"></label>
+            <label style="width:100%">Start Date<br><input type="date" name="start_date" value="__DATE__" required onchange="this.form.submit()" style="width:100%"><br>__HUMANIZED__</label>
         </div>
         <div class="eventfolio-col eventfolio-col-time">
-            <label style="width:100%">Start Time<br><input type="time" name="start_time" value="__START_TIME__" required style="width:100%"></label>
+            <label style="width:100%">Start Time<br><input type="time" name="start_time" value="__START_TIME__" required style="width:100%"><br></label>
         </div>
         <div class="eventfolio-col eventfolio-col-time">
-            <label style="width:100%">End Time<br><input type="time" name="end_time" value="__END_TIME__" required style="width:100%"></label>
+            <label style="width:100%">End Time<br><input type="time" name="end_time" value="__END_TIME__" required style="width:100%"><br></label>
         </div>
         <div class="eventfolio-col eventfolio-col-recur">
             <label style="width:100%">Recurrence<br>
-            <select name="recurrence" style="width:100%">
+            <select name="recurrence" onchange="this.form.submit()" style="width:100%">
                 __RECURRENCE_OPTIONS__
-            </select>
+            </select><br>
             </label>
         </div>
     </div>

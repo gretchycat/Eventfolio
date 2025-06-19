@@ -133,3 +133,34 @@ function template_render($template_file, $vars = array())
 
     return $template;
 }
+
+function ef_recurrence_human($date, $type)
+{
+    $dt = new DateTime($date);
+
+    if ($type === 'weekly') {
+        // Example: "Sunday"
+        return $dt->format('l');
+    }
+
+    if ($type === 'monthly') {
+        // Example: "2nd Sunday"
+        // Find day of week and its ordinal position this month
+        $dayOfWeek = $dt->format('l');
+        $day = (int)$dt->format('j');
+        // Which week is this day in? (1-based)
+        $ordinal = ceil($day / 7);
+        // Suffix for ordinal (1st, 2nd, 3rd, 4th, etc.)
+        $suffix = ['th','st','nd','rd','th','th','th','th','th','th'];
+        $ordinalStr = $ordinal . ($suffix[$ordinal] ?? 'th');
+        return "{$ordinalStr} {$dayOfWeek}";
+    }
+
+    if ($type === 'yearly') {
+        // Example: "June 15"
+        return $dt->format('F j');
+    }
+
+    // Default: just the date
+    return $dt->format('Y-m-d');
+}
