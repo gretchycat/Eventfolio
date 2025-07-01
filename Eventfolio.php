@@ -94,9 +94,35 @@ add_action('admin_menu', function()
 
 function ef_enqueue_admin_css()
 {
-    $css_url = plugins_url('assets/Linkfolio.css', __FILE__);
-    wp_enqueue_style('eventfolio-admin-css', $css_url, [], filemtime(__DIR__ . '/assets/Linkfolio.css'));
+    $css_url = plugins_url('assets/Eventfolio.css', __FILE__);
+    wp_enqueue_style('eventfolio-admin-css', $css_url, [], filemtime(__DIR__ . '/assets/Eventfolio.css'));
 }
 
 add_action('admin_enqueue_scripts', 'ef_enqueue_admin_css');
 
+add_action('admin_enqueue_scripts', function() //DEBUG
+{ //DEBUG
+    wp_enqueue_script( //DEBUG
+        'eventfolio-debug', //DEBUG
+        plugin_dir_url(__FILE__) . 'assets/debug.js', //DEBUG
+        array(), //DEBUG
+        filemtime(plugin_dir_path(__FILE__) . 'assets/debug.js'), //DEBUG
+        true//DEBUG
+    ); //DEBUG
+}); //DEBUG
+
+add_action('admin_enqueue_scripts', function($hook)
+{
+    if(isset($_GET['page']) && strpos($_GET['page'], 'eventfolio') !== false)
+    {
+        wp_enqueue_media();
+        wp_enqueue_script(
+            'eventfolio-media',
+            plugin_dir_url(__FILE__) . 'assets/Eventfolio.js',
+            ['jquery'],
+            filemtime(plugin_dir_path(__FILE__) . 'assets/Eventfolio.js'), //DEBUG
+            '1.0',
+            true
+        );
+    }
+});

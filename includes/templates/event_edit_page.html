@@ -4,15 +4,21 @@
     <input type="hidden" name="editing" value="true">
     <input type="hidden" name="edit" value="__EDIT__">
     <input type="hidden" name="mode" value="__MODE__">
+    <input type="hidden" name="date" value="__DATE__">
     <input type="hidden" name="sort" value="__SORT__">
-    <input type="hidden" name="category" value="__CATEGORY_SELECTED__">
     <input type="hidden" name="past" value="__PAST__">
     <input type="hidden" name="future" value="__FUTURE__">
     <input type="hidden" name="event_id" value="__EVENT_ID__">
-        <div class="eventfolio-col eventfolio-col-image">
-            <label>Featured Image<br>
-            __FEATURED_IMAGE__</label>
-        </div>
+    <input type="hidden" name="parent_id" value="__PARENT_ID__">
+    <div class="eventfolio-col eventfolio-col-image">
+        <div class="eventfolio-image-preview" id="preview-__EVENT_ID__">
+            <a href="#" id="select-__EVENT_ID__" title="Change image">
+                <img src="__IMAGE_URL__" alt="Featured Image" style="max-width:96px;max-height:96px;">
+            </a>
+        </div><br>
+        <label for="__EVENT_ID__">Featured Image</label>
+        <input type="hidden" id="__EVENT_ID__" name="featured_image" value="__IMAGE_ID__">
+    </div>
 
     <div class="eventfolio-row-noheight-noline eventfolio-row-form">
         <div class="eventfolio-col eventfolio-col-title-full">
@@ -22,7 +28,6 @@
     <div class="eventfolio-row-noheight-noline eventfolio-row-form">
         <div class="eventfolio-col eventfolio-col-category">
             <label style="width:100%">Category<br>
-                <!--__CATEGORY_NAME__-->
                 <select name="category" onchange="this.form.submit()" style="width:100%">
                     <option value="">All Categories</option>
                     __CATEGORY_OPTIONS__
@@ -32,15 +37,15 @@
         <div class="eventfolio-col eventfolio-col-location">
             <label style="width:100%">Location<br>
             <select name="location" style="width:100%">
+                <option value="">To be Determined</option>
                 __LOCATION_OPTIONS__
             </select><br>
-            <!--View map&nbsp;+Add Location-->
             </label>
         </div>
     </div>
     <div class="eventfolio-row-noheight-noline eventfolio-row-form">
         <div class="eventfolio-col eventfolio-col-date">
-            <label style="width:100%">Start Date<br><input type="date" name="start_date" value="__DATE__" required onchange="this.form.submit()" style="width:100%"><br>__HUMANIZED__</label>
+            <label style="width:100%">Start Date<br><input type="date" name="start_date" value="__EVENT_DATE__" required onchange="this.form.submit()" style="width:100%"><br><span style="font-size: 1.4em; font-weight: bold; width: 100%; text-align: center;">__HUMANIZED__</span></label>
         </div>
         <div class="eventfolio-col eventfolio-col-time">
             <label style="width:100%">Start Time<br><input type="time" name="start_time" value="__START_TIME__" required style="width:100%"><br></label>

@@ -94,7 +94,7 @@ Support or feedback: $SUPPORT
 == Installation ==
 1. Upload the plugin folder to \`/wp-content/plugins/\`
 2. Activate via the WordPress Plugins menu
-3. Configure from the Linkfolio settings screen
+3. Configure from the settings screen
 
 == Changelog ==
 = $VERSION =

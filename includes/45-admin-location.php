@@ -1,5 +1,5 @@
 <?php
-//  45-locationj.php
+//  45-admin-location.php
 
 if (!function_exists('ef_admin_locations_page'))
 {
@@ -37,16 +37,17 @@ if (!function_exists('ef_admin_locations_page'))
         {
             $id = ef_request_var('id', '');
             ef_delete_location($id);
-        }
- 
+        } 
         if ($action=='save')
         {
+            $image_id = ef_request_var('featured_image', '');
+            $image_url = wp_get_attachment_url($image_id);
             if(intval($id)<=0)
             {
                 $slug=sanitize_title($_POST['category'].' '.$_POST['name']);
                 ef_insert_location($slug, $_POST['name'], $_POST['category'],
                     '', $_POST['address'], $_POST['url'],
-                    $_POST['image_url'], '');
+                    $image_url, $image_id, '');
                 $saved=true;
             }
             else
@@ -56,7 +57,8 @@ if (!function_exists('ef_admin_locations_page'))
                     'category'=>$_POST['category'],
                     'url'=>$_POST['url'],
                     'address'=>$_POST['address'],
-                    'image_url'=>$_POST['image_url'],
+                    'image_url'=>$image_url,
+                    'image_id'=>$image_id,
                     );
                 ef_update_location(intval($id), $fields);
                 $saved=true;
@@ -79,18 +81,20 @@ function ef_admin_locations_list($category, $id, $saved)
         'MAP_LINK'  => '',
         'ACTIONS'   => '',
         'ROW_CLASS' => 'eventfolio-header',
+        'IMAGE_PREVIEW'=>'',
     ));
     if ($id=='new' and !$saved)
     {
         $row=(object)[
-            'id'        =>$id,
-            'slug'      =>'',
-            'name'      =>'',
-            'category'  =>$category,
+            'id'         =>$id,
+            'slug'       =>'',
+            'name'       =>'',
+            'category'   =>$category,
             'description'=>'',
-            'url'       =>'',
-            'address'   =>'',
-            'imageurl'  =>'',
+            'url'        =>'',
+            'address'    =>'',
+            'imageurl'   =>'',
+            'imageid'    =>'',
         ];
         ef_location_editor_row($row);
     }

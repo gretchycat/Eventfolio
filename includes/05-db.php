@@ -31,6 +31,8 @@ function ef_create_events_table()
         location varchar(255),
         created_by bigint(20) unsigned NOT NULL,
         status varchar(32) NOT NULL DEFAULT 'draft',
+        image_url varchar(255),
+        image_id bigint(28) unsigned,
         teaser text,
         parent_event_id BIGINT(20) UNSIGNED DEFAULT NULL,
         location_id BIGINT(20) UNSIGNED DEFAULT NULL,
@@ -57,6 +59,7 @@ function ef_create_locations_table()
         address text,
         url varchar(255),
         image_url varchar(255),
+        image_id bigint(28) unsigned,
         created_by bigint(20) unsigned NOT NULL,
         created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -456,7 +459,7 @@ function ef_reset_user_permissions($user_id)
 /*                                                        */
 /**********************************************************/
 
-function ef_insert_location($slug, $name, $category, $description, $address, $url, $image_url, $created_by)
+function ef_insert_location($slug, $name, $category, $description, $address, $url, $image_url, $image_id, $created_by)
 {
     global $wpdb;
     $table = EF_LOCATIONS_TABLE;
@@ -470,13 +473,14 @@ function ef_insert_location($slug, $name, $category, $description, $address, $ur
             'description' => $description,
             'address'     => $address,
             'url'         => $url,
+            'image_id'    => $image_id,
             'image_url'   => $image_url,
             'created_by'  => $created_by,
             'created_at'  => current_time('mysql'),
             'updated_at'  => current_time('mysql'),
         ],
         [
-            '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s'
+            '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%d', '%s', '%s'
         ]
     );
     return $wpdb->insert_id;
@@ -488,7 +492,7 @@ function ef_update_location($id, $fields)
     $table = EF_LOCATIONS_TABLE;
 
     // Only allow known columns
-    $allowed = ['slug','name','category','description','address','url','image_url','updated_at'];
+    $allowed = ['slug','name','category','description','address','url','image_url','updated_at', 'image_id'];
     $data = [];
     foreach ($fields as $k => $v) {
         if (in_array($k, $allowed)) $data[$k] = $v;
@@ -538,31 +542,4 @@ function ef_get_location_by_slug($slug)
     return $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE slug = %s", $slug));
 }
 
-function eventfolio_generate_map_url($location)
-{
-    // $location can be a DB row (object) or associative array
-    $address = '';
-    if (is_object($location)) {
-        $address = $location->address ?: $location->name;
-    } elseif (is_array($location)) {
-        $address = $location['address'] ?: $location['name'];
-    }
-    if (!$address) return '';
-    $query = urlencode($address);
-    return "https://www.google.com/maps/search/?api=1&query={$query}";
-}
-
-function eventfolio_generate_osm_url($location)
-{
-    // Accepts object (row) or array
-    $address = '';
-    if (is_object($location)) {
-        $address = $location->address ?: $location->name;
-    } elseif (is_array($location)) {
-        $address = $location['address'] ?: $location['name'];
-    }
-    if (!$address) return '';
-    $query = urlencode($address);
-    return "https://www.openstreetmap.org/search?query={$query}";
-}
 

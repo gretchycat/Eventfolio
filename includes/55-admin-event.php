@@ -7,38 +7,34 @@ if (!function_exists('ef_admin_events_page'))
     {
         // You might want your admin nav here
         if (function_exists('ef_admin_nav')) ef_admin_nav('Events');
-        //get display and filter  info
         $selected_category = ef_request_var('category', '');
-        $selected_date = ef_request_var('date', '');
+        $selected_date = ef_request_var('date', date("Y-m-d H:i:s", time()));
         $mode = ef_request_var('mode', 'list');
         $sort = ef_request_var('sort', 'a');
         $action = ef_request_var('action', '');
         $past = ef_str_to_bool(ef_request_var('past', 'false'));
         $future =  ef_str_to_bool(ef_request_var('future', 'false'));
         $editing = ef_str_to_bool(ef_request_var('editing', 'false'));
-        $categories = ef_get_categories();
-        $cat_options='';
-        foreach ($categories as $cat)
-        {
-            $sel = $selected_category == $cat->slug ? 'selected' : '';
-            $cat_options .= '<option value="' . esc_attr($cat->slug) . '" ' . $sel . '>' . esc_html($cat->name) . '</option>';
-        }
-
+        $cat_options=options_list(ef_get_categories(),$selected_category);
         if(!$past and !$future) //we have to show something!
             $future=true;
         //category chooser
         if($action=='save')
         {
             $event_id = ef_request_var('event_id', '');
+            $image_id = ef_request_var('featured_image', '');
+            $image_url = wp_get_attachment_url($image_id);
             $data = [
-                'title'       => $_POST['title'],
-                'description' => $_POST['description'],
-                'category'    => $_POST['category'],
-                'location'    => $_POST['location'],
-                'start_time'=> $_POST['start_date'].' '.$_POST['start_time'],
-                'end_time' =>  $_POST['start_date'].' '.$_POST['end_time'],
+                'title'           => $_POST['title'],
+                'description'     => $_POST['description'],
+                'category'        => $_POST['category'],
+                'location'        => $_POST['location'],
+                'start_time'      => $_POST['start_date'].' '.$_POST['start_time'],
+                'end_time'        => $_POST['start_date'].' '.$_POST['end_time'],
                 'recurrence_type' => $_POST['recurrence'],
-                'parent_event_id' => null,  // for exceptions/overrides
+                'parent_event_id' => $_POST['parent_id'],
+                'image_id'        => $_POST['featured_image'],
+                'image_url'       => $image_url,
             ];
             if($event_id=='new')
             {
@@ -58,110 +54,25 @@ if (!function_exists('ef_admin_events_page'))
         }
         if ($action=='edit' or $editing)// and $selected_category)
         {
-            $event_id = ef_request_var('event_id', '');
-            $cancel_link = add_query_arg([
-                    'page'     => 'eventfolio_events',
-                    'category' => $selected_category ?? '',
-                    'date'     => $selected_date ?? '',
-                    'mode'     => $mode,
-                    'sort'     => $sort,
-                    'past'     => $past ? 'true' : 'false',
-                    'future'   => $future ? 'true' : 'false',
-                ], admin_url('admin.php'));
-            $loc_options  =  '<option value="" >To be Determined</option>';
-            $locations = ef_get_locations($selected_category);
-            $row=array();
-            if (intval($event_id)>0)
-            {
-                $row=ef_get_event(intval($event_id));
-                $click = ef_str_to_bool(ef_request_var('click', 'false'));
-                if($click)
-                    $selected_category=$row->category;
-            }
-            else
-                $row=(object)array(
-                    'title'=>'',
-                    'location'=>'',
-                    'start_time'=>date("Y-m-d H:i:s", time()),
-                    'end_time'=>date("Y-m-d H:i:s", time()+3600),
-                    'description'=>'',
-                    'recurrence_type' => '',
-                    'category'=>$selected_category,
-                    );
-            $cat_options='';
-            foreach ($categories as $cat)
-            {
-                $sel = $selected_category == $cat->slug ? 'selected' : '';
-                $cat_options .= '<option value="' . esc_attr($cat->slug) . '" ' . $sel . '>' . esc_html($cat->name) . '</option>';
-            }
-            $location=ef_request_var('location', $row->location);
-            foreach ($locations as $loc)
-            {
-                $sel = $location == $loc->slug ? 'selected' : '';
-                $loc_options .= '<option value="' . esc_attr($loc->slug) . '" ' . $sel . '>' . esc_html($loc->name) . '</option>';
-            }
-            $recurrence=ef_request_var('recurrence', $row->recurrence_type);
-            $recur=array(
-                    'Single' => '',
-                    'Weekly' => 'weekly',
-                    'Monthly'=> 'monthly',
-                    'Yearly' => 'yearly',
-                    );
-            $rec_options='';
-            foreach($recur as $name=>$value)
-            {
-                $sel='';
-                if($recurrence==$value)
-                    $sel='selected';
-                $rec_options .= '<option value="'.$value.'" '.$sel.'>'.$name.'</option>';
-            }
-            $start_date = date('Y-m-d', strtotime($row->start_time));
-            $start_time = date('H:i', strtotime($row->start_time));
-            $end_time   = date('H:i', strtotime($row->end_time));
-            $humanized='';
-            if ($recurrence)
-                $humanized= ef_recurrence_human(ef_request_var('start_date', $start_date), $recurrence);
-            echo template_render('event_edit_page.html', array(
-                'MODE'               => $mode,
-                'SORT'               => $sort,
-                'EVENT_ID'           => $event_id,
-                'SELECTED_CATEGORY'  => esc_attr($selected_category),
-                'CATEGORY_OPTIONS'   => $cat_options,
-                'RECURRENCE_OPTIONS' => $rec_options,
-                'LOCATION_OPTIONS'   => $loc_options,
-                'RECURRENCE_DETAILS' => '',
-                'PAST'               => $past ? 'true' : 'false',
-                'FUTURE'             => $future ? 'true' : 'false',
-                'CANCEL_URL'         => esc_url($cancel_link),
-                'TITLE'              => ef_request_var('title', $row->title),
-                'DESCRIPTION'        => ef_request_var('description', $row->description),
-                'DATE'               => ef_request_var('start_date', $start_date),
-                'START_TIME'         => ef_request_var('start_time', $start_time),
-                'END_TIME'           => ef_request_var('end_time', $end_time),
-                'HUMANIZED'          => $humanized,
-
-                ));
+            ef_event_editor();
         }
         else
         {
             echo template_render('event_page_header.html', array(
                 'MODE'             => $mode,
+                'DATE'             => $selected_date,
                 'SORT'             => $sort,
                 'SELECTED_CATEGORY'=> esc_attr($selected_category),
                 'CATEGORY_OPTIONS' => $cat_options,
                 'PAST'       => $past ? 'true' : 'false',
                 'FUTURE'     => $future ? 'true' : 'false',
                 ));
-            /*if ($event_id)
-            {
-                echo '<strong>Please select a category.</strong><br>';
-            }*/
-
             //custom based on display mode
             if ($mode=='list')
             {
                 echo template_render('event_page_list_header.html', array(
                     'MODE'             => $mode,
+                    'DATE'             => $selected_date,
                     'SORT'             => $sort,
                     'SELECTED_CATEGORY'=> esc_attr($selected_category),
                     'PAST_CHECKED'     => $past ? 'checked' : '',
@@ -197,7 +108,7 @@ if (!function_exists('ef_admin_events_page'))
             }
             elseif ($mode=='calendar')
             {//show calendar interface
-                ef_admin_events_calendar($selected_category);
+                ef_admin_events_calendar($selected_category, $selected_date);
             }
         }
     }
@@ -218,12 +129,13 @@ function ef_admin_events_list($category, $past, $future, $sort)
         'ACTIONS' => '',
         'HEADER' => 'eventfolio-header',
     ));
-
+    $mode='list';
     $events = ef_get_events($category, $past, $future, $sort);
     if (!empty($events))
     {
         foreach ($events as $row)
         {
+            $edit_series='';
             $edit_url = add_query_arg([
                 'page'     => 'eventfolio_events',
                 'event_id' => $row->id,
@@ -235,6 +147,7 @@ function ef_admin_events_list($category, $past, $future, $sort)
                 'past'     => $past ? 'true' : 'false',
                 'future'   => $future ? 'true' : 'false',
                 ], admin_url('admin.php'));
+
             $delete_url = add_query_arg([
                 'page'     => 'eventfolio_events',
                 'event_id' => $row->id,
@@ -245,7 +158,40 @@ function ef_admin_events_list($category, $past, $future, $sort)
                 'past'     => $past ? 'true' : 'false',
                 'future'   => $future ? 'true' : 'false',
                 ], admin_url('admin.php'));
-            ef_event_viewer_row($row, $edit_url, $delete_url);
+            if($row->recurrence_type)
+            {
+                $edit_series=$edit_url;
+
+                $next = ef_get_next_event_times(
+                    date("Y-m-d H:i:s", time()),
+                    $row->start_time,
+                    $row->end_time,
+                    $row->recurrence_type);
+                $start_date = date('Y-m-d', strtotime($next['start']));
+                $start_time = date('H:i', strtotime($next['start']));
+                $end_time   = date('H:i', strtotime($next['end']));
+                $edit_url = add_query_arg([
+                    'page'       => 'eventfolio_events',
+                    'event_id'   => 'new',
+                    'parent_id'  => $row->id,
+                    'action'     => 'edit',
+                    'click'      => 'true',
+                    'featured_image'=> $row->image_id,
+                    'image_url'  => $row->image_url,
+                    'start_date' => $start_date,
+                    'start_time' => $start_time,
+                    'end_time'   => $end_time,
+                    'category'   => $row->category,
+                    'mode'       => $mode,
+                    'sort'       => $sort,
+                    'past'       => $past ? 'true' : 'false',
+                    'future'     => $future ? 'true' : 'false',
+                    'title'      => $row->title,
+                    'recurrence' => '',
+                    'description'=> $row->description,
+                    ], admin_url('admin.php'));
+            }
+            ef_event_viewer_row($row, $edit_url, $delete_url, $edit_series);
         }
     }
     else
@@ -255,6 +201,62 @@ function ef_admin_events_list($category, $past, $future, $sort)
     echo '</div>';
 }
 
-function ef_admin_events_calendar($category)
+function ef_admin_events_calendar($category, $date)
 {
+    $date_only = date('Y-m-d', strtotime($date));
+    $dow = [];
+    for ($i = 0; $i < 7; $i++) {
+        $dow[] = date_i18n('l', strtotime("sunday +$i days"));
+    }
+    $cakendar='';
+    $dt=ef_get_week_start_sunday($date);
+    $cells='';
+    foreach($dow as $day)
+    {
+        $cells.=template_render('calendar_month_cell.html', array(
+            'DAY'       => $day,
+            'EVENTS'    => '',
+            'DAY_THEME' => 'calendar-month-header'
+        ));
+    }
+
+    $calendar.=template_render('calendar_month_row.html', array(
+            'HEADER'    => 'eventfolio-header',
+            'CELLS'     => $cells,
+            ));
+    $start_month = date_i18n('F', strtotime($dt));
+    for ($w=0;$w<5;$w++)
+    {
+        $cells='';
+        foreach ($dow as $day)
+        {
+            $p=explode('-', $dt);
+            $y=$p[0];
+            $m=$p[1];
+            $d=$p[2];
+            $month = date_i18n('F', strtotime($dt));
+            $theme='';
+            if ($dt<$date_only)
+                $theme='x-cross';
+            if ($dt==$date_only)
+                $theme='calendar-today';
+            $cells.=template_render('calendar_month_cell.html', array(
+                'DAY'       => $d,
+                'EVENTS'    => '',
+                'DAY_THEME' => $theme,
+            ));
+            $dt=ef_get_next_day($dt);
+        }
+        $calendar.=template_render('calendar_month_row.html', array(
+            'HEADER'    => '',
+            'CELLS'     => $cells,
+            ));
+    }
+    $end_month = date_i18n('F', strtotime($dt));
+    echo template_render('calendar_month.html', array(
+        'MONTH'     => $start_month.'—'.$end_month,
+        'CALENDAR'  => $calendar,
+        ));
 }
+
+

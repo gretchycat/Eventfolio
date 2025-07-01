@@ -3,14 +3,22 @@ if (!defined('ABSPATH')) exit;
 
 if (!function_exists('ef_event_viewer_row'))
 {
-    function ef_event_viewer_row($row, $edit_url, $delete_url)
+    function ef_event_viewer_row($row, $edit_url, $delete_url, $edit_series='')
     {
         if(!$row) return;
         {
-            $icon='<img src="'.$row->icon.'" >';
-
-            $actions_html='<a href="'.$edit_url.'">Edit</a>&nbsp;';
-            $actions_html.='<a href="'.$delete_url.'">Delete</a>';
+            $icon='<img src="'.$row->image_url.'" width="100%">';
+            if ($edit_series)
+            {
+                $actions_html='<div><a href="'.$edit_url.'">New</a> ';
+                $actions_html.='<a href="'.$edit_series.'">Edit&nbsp;Series</a>  ';
+                $actions_html.='<a href="'.$delete_url.'">Delete</a></div>';
+            }
+            else
+            {
+                $actions_html='<div><a href="'.$edit_url.'">Edit</a> ';
+                $actions_html.='<a href="'.$delete_url.'">Delete</a></div>';
+            }
             $start_date = date('Y-m-d', strtotime($row->start_time));
             $start_time = date('H:i', strtotime($row->start_time));
             $end_time   = date('H:i', strtotime($row->end_time));

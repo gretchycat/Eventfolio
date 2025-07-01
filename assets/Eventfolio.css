@@ -65,6 +65,7 @@
 
 .ef-admin-nav {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5em;
     margin-bottom: 1em;
     padding: 0.5em 0;
@@ -313,7 +314,52 @@
     color: #1976D2;
 }
 
+.eventfolio-col-actions {
+    word-break: normal;
+    overflow-wrap: normal;
+    white-space: normal;
+}
+.eventfolio-col-actions a {
+    display: inline-block;
+    margin-right: 0.8em;
+}
+.calendar-month-header {
+    text-align: center;
+    align-items: center;
+}
 
+.calendar-today {
+    border-top: 2px solid #00F;
+    border-bottom: 2px solid #00F;
+    border-left: 2px solid #00F;
+    border-right: 2px solid #00F;
+}
+
+.x-cross {
+  position: relative;
+}
+
+.x-cross::before,
+.x-cross::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%;
+  height: 100%;
+  border-top: 2px solid red;
+}
+
+.x-cross::before {
+  transform: rotate(45deg);
+}
+
+.x-cross::after {
+  transform: rotate(-45deg);
+}
+
+.calendar-cell-past {
+
+}
 /* --- LOADED TEST --- */
 /*body::after {
     content: "Eventfolio CSS loaded";

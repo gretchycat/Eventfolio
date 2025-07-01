@@ -22,6 +22,8 @@ function ef_location_editor_row($row)
         'MAP_LINK'  => '',
         'ACTIONS'   => "$save&nbsp;$cancel",
         'ROW_CLASS' => '',
+        'IMAGE_ID' => $row->image_id ?? '',
+        'IMAGE_URL' => $row->image_url ?? '',
     ));
  
 }
