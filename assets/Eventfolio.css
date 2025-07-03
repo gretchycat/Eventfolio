@@ -328,38 +328,36 @@
     align-items: center;
 }
 
+.calendar-cell {
+    width:14%;
+    border:1px solid #777;
+    overflow:hidden;
+
+}
+
+.calendar-past {
+    background-image: url('/wp-content/plugins/Eventfolio/assets/x.svg');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
 .calendar-today {
-    border-top: 2px solid #00F;
-    border-bottom: 2px solid #00F;
-    border-left: 2px solid #00F;
-    border-right: 2px solid #00F;
+    border: 1px solid #55F;
+    background-color: rgba(0,0,255,0.2);
 }
 
-.x-cross {
-  position: relative;
+.calendar-selected {
+    border: 1px solid #5F5;
+    background-color: rgba(0,255,0,0.2);
 }
 
-.x-cross::before,
-.x-cross::after {
-  content: '';
-  position: absolute;
-  left: 0; top: 0;
-  width: 100%;
-  height: 100%;
-  border-top: 2px solid red;
+.calendar-selected-today {
+    border: 1px solid #5FF;
+    background-color: rgba(0,255,255,0.2);
 }
 
-.x-cross::before {
-  transform: rotate(45deg);
-}
+.indent { padding-left: 2em; }
 
-.x-cross::after {
-  transform: rotate(-45deg);
-}
-
-.calendar-cell-past {
-
-}
 /* --- LOADED TEST --- */
 /*body::after {
     content: "Eventfolio CSS loaded";

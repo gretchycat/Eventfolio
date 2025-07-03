@@ -252,6 +252,67 @@ function ef_get_events($category = '', $past = true, $future = true, $sort = 'a'
     return $wpdb->get_results($sql);
 }
 
+function ef_get_events_between($category = '', $start = '', $end = '')
+{
+    global $wpdb;
+    $events_table = $wpdb->prefix . 'eventfolio_events';
+    $where = [];
+    $params = [];
+
+    if (!empty($category)) {
+        $where[] = "category = %s";
+        $params[] = $category;
+    }
+    if (!empty($end)) {
+        $where[] = "(end_time <= %s OR recurrence_type != '')";
+        $params[] = $end;
+    }
+    if (!empty($start)) {
+        $where[] = "(start_time >= %s OR recurrence_type != '')";
+        $params[] = $start;
+    }
+
+    $where_sql = '';
+    if (!empty($where)) {
+        $where_sql = 'WHERE ' . implode(' AND ', $where);
+    }
+
+    $sql = "SELECT * FROM $events_table $where_sql ORDER BY start_time ASC";
+    return $wpdb->get_results($wpdb->prepare($sql, ...$params));
+}
+
+function ef_get_events_on($category, $day)
+{
+    $start = date('Y-m-d', strtotime($day)).' 00:00';
+    $end =   date('Y-m-d', strtotime($day)).' 23:59';
+    $day_only= date('Y-m-d', strtotime($day));
+    $yesterday= date('Y-m-d', strtotime($day.' -1 day'));
+    $events=ef_get_events_between($category, $start, $end);
+    $filtered=[];
+    $instances=[];
+    foreach($events as $ev)
+    {
+        if($ev->recurrence_type=='')
+        {
+            $filtered[]=$ev;
+            if($ev->parent_event_id>0)
+                $instances[]=$ev->parent_event_id;
+        }
+    }
+    foreach($events as $ev)
+    {
+        if($ev->recurrence_type!='')
+        {
+            $next = date('Y-m-d', strtotime(ef_get_next_event_times($yesterday, $ev->start_time, $ev->end_time, $ev->recurrence_type)['start']));
+
+            if($next==$day_only)
+                if(!in_array($ev->id, $instances))
+                    $filtered[]=$ev;
+        }
+    }
+    return $filtered;
+}
+
 // --- GET single event ---
 function ef_get_event($event_id)
 {

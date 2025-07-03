@@ -203,19 +203,23 @@ function ef_admin_events_list($category, $past, $future, $sort)
 
 function ef_admin_events_calendar($category, $date)
 {
+    $now=date("Y-m-d H:i:s", time());
+    $now_date=date("Y-m-d", time());
+
     $date_only = date('Y-m-d', strtotime($date));
     $dow = [];
     for ($i = 0; $i < 7; $i++) {
         $dow[] = date_i18n('l', strtotime("sunday +$i days"));
     }
-    $cakendar='';
+    $calendar='';
     $dt=ef_get_week_start_sunday($date);
     $cells='';
     foreach($dow as $day)
     {
+        $events='';
         $cells.=template_render('calendar_month_cell.html', array(
             'DAY'       => $day,
-            'EVENTS'    => '',
+            'EVENTS'    => $events,
             'DAY_THEME' => 'calendar-month-header'
         ));
     }
@@ -236,13 +240,30 @@ function ef_admin_events_calendar($category, $date)
             $d=$p[2];
             $month = date_i18n('F', strtotime($dt));
             $theme='';
-            if ($dt<$date_only)
-                $theme='x-cross';
+            if ($dt<$now_date)
+                $theme.='calendar-past ';
             if ($dt==$date_only)
-                $theme='calendar-today';
+                $theme.='calendar-selected ';
+            if ($dt==$now_date)
+                $theme.='calendar-today ';
+            if ($dt==$date_only and $dt==$now_date)
+                $theme.='calendar-selected-today ';
+            $events='';
+            $evs=ef_get_events_on($category, $dt);
+            foreach($evs as $ev)
+            {
+                $events .= template_render('calendar_month_cell_event.html', array(
+                    'ICON'    =>'XX',
+                    'TITLE'   =>$ev->title,
+                    'START'   =>'start',
+                    'END'     =>'end',
+                    'ACTIONS' =>'actions',
+
+                    ));
+            }
             $cells.=template_render('calendar_month_cell.html', array(
                 'DAY'       => $d,
-                'EVENTS'    => '',
+                'EVENTS'    => $events,
                 'DAY_THEME' => $theme,
             ));
             $dt=ef_get_next_day($dt);
