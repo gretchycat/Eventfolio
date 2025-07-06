@@ -18,11 +18,11 @@ if (!function_exists('ef_admin_events_page'))
         $cat_options=options_list(ef_get_categories(),$selected_category);
         if(!$past and !$future) //we have to show something!
             $future=true;
-                echo '<pre></code>';
-                print_r($_GET);
-                print_r($_POST);
-                echo '</code></pre>';
- 
+        /*echo '<pre></code>';
+        print_r($_GET);
+        print_r($_POST);
+        echo '</code></pre>';/**/
+
         //category chooser
         if($action=='save')
         {
@@ -123,7 +123,7 @@ if (!function_exists('ef_admin_events_page'))
     }
 }
 
-function ef_admin_events_links($row, $category, $past, $future, $sort, $date)
+function ef_admin_events_links($row, $category, $past, $future, $sort, $date, $selected_date='')
 {
     $edit_series='';
     $delete_url='';
@@ -132,6 +132,19 @@ function ef_admin_events_links($row, $category, $past, $future, $sort, $date)
     $mode = ef_request_var('mode', 'list');
     if(!intval($row->id))
         $row->id='new';
+    $view_url = add_query_arg([
+        'page'     => 'eventfolio_events',
+        'event_id' => $row->id,
+        'action'   => 'view',
+        'click'    => 'true',
+        'category' => $category ?? '',
+        'date'     => $date ?? '',
+        'mode'     => $mode,
+        'sort'     => $sort,
+        'past'     => $past ? 'true' : 'false',
+        'future'   => $future ? 'true' : 'false',
+        ], home_url('/events/'));
+ 
     $edit_url = add_query_arg([
         'page'     => 'eventfolio_events',
         'event_id' => $row->id,
@@ -172,8 +185,9 @@ function ef_admin_events_links($row, $category, $past, $future, $sort, $date)
                 ], admin_url('admin.php'));
         if($row->recurrence_type)
         {
+            $when=$selected_date ?? date("Y-m-d", time());
             $next = ef_get_next_event_times(
-                date("Y-m-d", time()),
+                $when,
                 $row->start_time,
                 $row->end_time,
                 $row->recurrence_type);
@@ -204,6 +218,7 @@ function ef_admin_events_links($row, $category, $past, $future, $sort, $date)
         }
     }
     return array(
+        'view'         => $view_url,
         'edit'         => $edit_url,
         'delete'       => $delete_url,
         'edit_series'  => $edit_series,
@@ -302,13 +317,30 @@ function ef_admin_events_calendar($category, $date)
                     'END'     => date("H:i", strtotime($ev->end_time)),
                     'ACTIONS' =>'',
                     ));
-                $args = array_merge($_GET, $_POST);
-                $args['action'] = 'edit';
-                $args['event_id'] = $ev->id;
-                $url = add_query_arg($args, admin_url('admin.php'));
-                $ln='<a href="'.$url.'" class="eventfolio-event">';
-                $lc='</a>';
-                $events.= $ln.$event.$lc;
+                if(true)    //is validated?
+                {
+                    $args = array_merge($_GET, $_POST);
+                    $links=ef_admin_events_links($ev, $category, $past, $future, $sort, $date_only, $dt);
+                    if(true)    //is organizer?
+                    {
+                        $url = '';
+                        if($links['new_instance'])
+                            $url=$links['new_instance'];
+                        else
+                            $url=$links['edit'];
+                    }
+                    else
+                    {
+                        $url=$links['view'];
+                    }
+                    $ln='<a href="'.$url.'" class="eventfolio-event">';
+                    $lc='</a>';
+                    $events.= $ln.$event.$lc;
+                }
+                else
+                {
+                    $events.=$event;
+                }
             }
             $cells.=template_render('calendar_month_cell.html', array(
                 'DAY'       => $d,

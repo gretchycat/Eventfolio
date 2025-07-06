@@ -57,7 +57,7 @@ function ef_event_editor()
     }
     $image_url = wp_get_attachment_url($image_id);
     $rec_options=options_list($recur,$recurrence);
-    $start_date = date('Y-m-d', strtotime($row->start_time));
+    $start_date = $date ??date('Y-m-d', strtotime($row->start_time));
     $start_time = date('H:i', strtotime($row->start_time));
     $end_time   = date('H:i', strtotime($row->end_time));
     $humanized='';
