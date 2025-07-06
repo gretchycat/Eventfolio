@@ -188,7 +188,8 @@ function ef_add_event($args)
         'location' => '',
         'created_by' => get_current_user_id(),
         'status' => 'draft',
-        'teaser' => ''
+        'teaser' => '',
+        'parent_event_id' => null,
     ];
     $data = wp_parse_args($args, $defaults);
     $wpdb->insert($table, $data);
@@ -203,22 +204,6 @@ function ef_events_table()
 }
 
 // --- GET all events ---
-function ef_get_events_old($args = [])
-{
-    global $wpdb;
-    $table = ef_events_table();
-
-    $where = "WHERE 1=1";
-    $order = "ORDER BY start_time ASC";
-    $limit = "";
-
-    // Optionally add filters, e.g., by category, status, etc.
-    // if (!empty($args['category'])) { ... }
-
-    $sql = "SELECT * FROM $table $where $order $limit";
-    return $wpdb->get_results($sql);
-}
-
 function ef_get_events($category = '', $past = true, $future = true, $sort = 'a')
 {
     global $wpdb;
@@ -296,7 +281,7 @@ function ef_get_events_on($category, $day)
         {
             $filtered[]=$ev;
             if($ev->parent_event_id>0)
-                $instances[]=$ev->parent_event_id;
+                $instances[]=intval($ev->parent_event_id);
         }
     }
     foreach($events as $ev)
@@ -306,7 +291,7 @@ function ef_get_events_on($category, $day)
             $next = date('Y-m-d', strtotime(ef_get_next_event_times($yesterday, $ev->start_time, $ev->end_time, $ev->recurrence_type)['start']));
 
             if($next==$day_only)
-                if(!in_array($ev->id, $instances))
+                if(!in_array(intval($ev->id), $instances))
                     $filtered[]=$ev;
         }
     }

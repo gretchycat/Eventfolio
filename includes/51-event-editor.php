@@ -27,6 +27,7 @@ function ef_event_editor()
         $row=ef_get_event(intval($event_id));
         if( ef_str_to_bool(ef_request_var('click', 'false')))
             $selected_category=$row->category;
+        $parent_id=$row->parent_event_id;
     }
     else
         $row=(object)array(
@@ -37,6 +38,7 @@ function ef_event_editor()
             'description'=>'',
             'recurrence_type' => '',
             'category'=>$selected_category,
+            'parent_event_id'=>$parent_id,
             );
     $cat_options=options_list(ef_get_categories(),$selected_category);
     $loc_options=options_list(ef_get_locations($selected_category),ef_request_var('location', $row->location));
@@ -54,7 +56,6 @@ function ef_event_editor()
         $image_id=ef_request_var('featured_image', ef_get_event($parent_id)->image_id);
     }
     $image_url = wp_get_attachment_url($image_id);
-
     $rec_options=options_list($recur,$recurrence);
     $start_date = date('Y-m-d', strtotime($row->start_time));
     $start_time = date('H:i', strtotime($row->start_time));
@@ -64,6 +65,25 @@ function ef_event_editor()
         $humanized= ef_recurrence_human(ef_request_var('start_date', $start_date), $recurrence);
     $image_id=ef_request_var('featured_image', $row->image_id);
     $image_url = wp_get_attachment_url($image_id);
+    $delete_link='';
+    $series_link='';
+    if(intval($event_id))
+        $delete_link='Delete';
+    if($recurrence and intval($row->id))
+        $series_link='New Instance';
+    if(intval($parent_id))
+        $series_link='Edit Series';
+    $links=ef_admin_events_links($row, $category, $past, $future, $sort, $date);
+    $dl='';
+    $sl='';
+    $nl='';
+    if($links['delete'])
+        $dl = '<a href="'.$links['delete'].'">Delete</a>';
+    if($links['edit_series'])
+        $sl = '<a href="'.$links['edit_series'].'">Edit&nbsp;Series</a>';
+     if($links['new_instance'])
+        $nl = '<a href="'.$links['new_instance'].'">New&nbspInstance</a>';
+ 
     echo template_render('event_edit_page.html', array(
         'MODE'               => $mode,
         'DATE'               => $date,
@@ -86,5 +106,8 @@ function ef_event_editor()
         'HUMANIZED'          => $humanized,
         'IMAGE_ID'           => $image_id,
         'IMAGE_URL'          => $image_url,
+        'DELETE_LINK'        => $dl,
+        'SERIES_LINK'        => $sl,
+        'NEW_INSTANCE'       => $nl,
         ));
 }

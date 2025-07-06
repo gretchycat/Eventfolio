@@ -3,21 +3,27 @@ if (!defined('ABSPATH')) exit;
 
 if (!function_exists('ef_event_viewer_row'))
 {
-    function ef_event_viewer_row($row, $edit_url, $delete_url, $edit_series='')
+    function ef_event_viewer_row($row, $edit_url, $delete_url, $edit_series='', $new_instance='')
     {
         if(!$row) return;
         {
             $icon='<img src="'.$row->image_url.'" width="100%">';
-            if ($edit_series)
+            if ($new_instance)
             {
-                $actions_html='<div><a href="'.$edit_url.'">New</a> ';
-                $actions_html.='<a href="'.$edit_series.'">Edit&nbsp;Series</a>  ';
-                $actions_html.='<a href="'.$delete_url.'">Delete</a></div>';
+                $actions_html='<div>';
+                $actions_html.='<a href="'.$new_instance.'">New&nbsp;Instance</a> ';
+                $actions_html.='<a href="'.$edit_url.'">Edit&nbsp;Series</a>  ';
+                $actions_html.='<a href="'.$delete_url.'">Delete</a> ';
+                $actions_html.='</div>';
             }
             else
             {
-                $actions_html='<div><a href="'.$edit_url.'">Edit</a> ';
-                $actions_html.='<a href="'.$delete_url.'">Delete</a></div>';
+                $actions_html='<div>';
+                $actions_html.='<a href="'.$edit_url.'">Edit</a> ';
+                if($edit_series)
+                    $actions_html.='<a href="'.$edit_series.'">Edit&nbsp;Series</a> ';
+                $actions_html.='<a href="'.$delete_url.'">Delete</a> ';
+                $actions_html.='</div>';
             }
             $start_date = date('Y-m-d', strtotime($row->start_time));
             $start_time = date('H:i', strtotime($row->start_time));
