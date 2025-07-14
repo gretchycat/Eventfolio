@@ -159,11 +159,19 @@
 
 .eventfolio-plain-col {
     display: flex;
-    align-items: center;
-    text-align: center;
+    align-items: left;
+    text-align: left;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-left 4px;
+    padding-right 4px;
+    padding-bottom 4px;
+}
+.eventfolio-plain-col-wrap {
+    display: flex;
+    align-items: left;
+    text-align: left;
     padding-left 4px;
     padding-right 4px;
     padding-bottom 4px;

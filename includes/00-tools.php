@@ -1,5 +1,6 @@
 <?php
 
+if (!defined('ABSPATH')) exit;
 // --- Admin navigation ---
 function ef_admin_nav($selected='')
 {
@@ -343,3 +344,26 @@ function eventfolio_generate_osm_url($location)
     return "https://www.openstreetmap.org/search?query={$query}";
 }
 
+function ef_recursive_unslash($data)
+{
+    if (is_array($data)) {
+        // If array, recurse on each value
+        foreach ($data as $key => $value) {
+            $data[$key] = ef_recursive_unslash($value);
+        }
+        return $data;
+    } elseif (is_object($data)) {
+        // If object, clone and recurse on each property
+        $cloned = clone $data;
+        foreach ($cloned as $key => $value) {
+            $cloned->$key = ef_recursive_unslash($value);
+        }
+        return $cloned;
+    } elseif (is_string($data)) {
+        // If string, unslash
+        return wp_unslash($data);
+    } else {
+        // For anything else (int, bool, null), return as-is
+        return $data;
+    }
+}

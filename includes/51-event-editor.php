@@ -12,6 +12,7 @@ function ef_event_editor()
     $sort = ef_request_var('sort', '');
     $mode = ef_request_var('mode', '');
     $date = ef_request_var('date', '');
+    $length = ef_request_var('length', '');
     $cancel_link = add_query_arg([
         'page'     => 'eventfolio_events',
         'category' => $selected_category ?? '',
@@ -30,16 +31,22 @@ function ef_event_editor()
         $parent_id=$row->parent_event_id;
     }
     else
+    {
+        if($date=='')
+            $tm= current_time('timestamp');
+        else
+            $tm=strtotime($date);
         $row=(object)array(
             'title'=>'',
             'location'=>'',
-            'start_time'=>date("Y-m-d H:i:s", time()),
-            'end_time'=>date("Y-m-d H:i:s", time()+(60*60)),
+            'start_time'=>date_i18n("Y-m-d H:i:s",$tm),
+            'end_time'=>date_i18n("Y-m-d H:i:s", $tm+(60*60)),
             'description'=>'',
             'recurrence_type' => '',
             'category'=>$selected_category,
             'parent_event_id'=>$parent_id,
             );
+    }
     $cat_options=options_list(ef_get_categories(),$selected_category);
     $loc_options=options_list(ef_get_locations($selected_category),ef_request_var('location', $row->location));
     $recurrence=ef_request_var('recurrence', $row->recurrence_type);
@@ -50,16 +57,36 @@ function ef_event_editor()
         'Yearly' => 'yearly',
             );
     $image_id=ef_request_var('featured_image', $row->image_id);
+    $end= strtotime($row->end_time);
     if($parent_id)
     {
         $recur=array('Instance' => '');
         $image_id=ef_request_var('featured_image', ef_get_event($parent_id)->image_id);
     }
+    $l=strtotime($row->end_time)-strtotime($row->start_time);
+    if($length='')
+    {
+        if($l<0)
+        {
+            $length=0;
+            $end=strtotime($row->start_time);
+        }
+        else
+            $length=$l;
+    }
+    else
+    {
+        if($l<0)
+        {
+            $length=intval($length);
+            $end=strtotime($row->start_time)+$length;
+        }
+    }
     $image_url = wp_get_attachment_url($image_id);
     $rec_options=options_list($recur,$recurrence);
-    $start_date = $date ??date('Y-m-d', strtotime($row->start_time));
-    $start_time = date('H:i', strtotime($row->start_time));
-    $end_time   = date('H:i', strtotime($row->end_time));
+    $start_date=date_i18n('Y-m-d', strtotime($row->start_time));
+    $start_time = date_i18n('H:i', strtotime($row->start_time));
+    $end_time   = date_i18n('H:i', $end);
     $humanized='';
     if ($recurrence)
         $humanized= ef_recurrence_human(ef_request_var('start_date', $start_date), $recurrence);
@@ -73,7 +100,7 @@ function ef_event_editor()
         $series_link='New Instance';
     if(intval($parent_id))
         $series_link='Edit Series';
-    $links=ef_admin_events_links($row, $category, $past, $future, $sort, $date);
+    $links=ef_admin_events_links($row, $category, $date);
     $dl='';
     $sl='';
     $nl='';
@@ -83,10 +110,10 @@ function ef_event_editor()
         $sl = '<a href="'.$links['edit_series'].'">Edit&nbsp;Series</a>';
      if($links['new_instance'])
         $nl = '<a href="'.$links['new_instance'].'">New&nbspInstance</a>';
- 
+
     echo template_render('event_edit_page.html', array(
         'MODE'               => $mode,
-        'DATE'               => $date,
+        'DATE'               => $selected_date,
         'SORT'               => $sort,
         'EVENT_ID'           => $event_id,
         'PARENT_ID'          => $parent_id,
@@ -103,6 +130,7 @@ function ef_event_editor()
         'EVENT_DATE'         => ef_request_var('start_date', $start_date),
         'START_TIME'         => ef_request_var('start_time', $start_time),
         'END_TIME'           => ef_request_var('end_time', $end_time),
+        'LENGTH'             => $length,
         'HUMANIZED'          => $humanized,
         'IMAGE_ID'           => $image_id,
         'IMAGE_URL'          => $image_url,

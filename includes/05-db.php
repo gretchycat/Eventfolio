@@ -35,6 +35,7 @@ function ef_create_events_table()
         image_id bigint(28) unsigned,
         teaser text,
         parent_event_id BIGINT(20) UNSIGNED DEFAULT NULL,
+        visibility varchar(16) NOT NULL DEFAULT 'public',
         location_id BIGINT(20) UNSIGNED DEFAULT NULL,
         featured_image_id BIGINT(20) UNSIGNED DEFAULT NULL,
         created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -188,6 +189,7 @@ function ef_add_event($args)
         'location' => '',
         'created_by' => get_current_user_id(),
         'status' => 'draft',
+        'privacy' => '',
         'teaser' => '',
         'parent_event_id' => null,
     ];
@@ -234,7 +236,7 @@ function ef_get_events($category = '', $past = true, $future = true, $sort = 'a'
         $where_sql = 'WHERE ' . implode(' AND ', $where);
     }
     $sql = "SELECT * FROM $events_table $where_sql ORDER BY start_time $order";
-    return $wpdb->get_results($sql);
+    return ef_recursive_unslash($wpdb->get_results($sql));
 }
 
 function ef_get_events_between($category = '', $start = '', $end = '')
@@ -263,7 +265,7 @@ function ef_get_events_between($category = '', $start = '', $end = '')
     }
 
     $sql = "SELECT * FROM $events_table $where_sql ORDER BY start_time ASC";
-    return $wpdb->get_results($wpdb->prepare($sql, ...$params));
+    return ef_recursive_unslash($wpdb->get_results($wpdb->prepare($sql, ...$params)));
 }
 
 function ef_get_events_on($category, $day)
@@ -304,7 +306,7 @@ function ef_get_event($event_id)
     global $wpdb;
     $table = ef_events_table();
     $sql = $wpdb->prepare("SELECT * FROM $table WHERE id = %d", $event_id);
-    return $wpdb->get_row($sql);
+    return ef_recursive_unslash($wpdb->get_row($sql));
 }
 
 // --- INSERT new event (very basic) ---
@@ -318,6 +320,7 @@ function ef_insert_event($data)
         'start_time' => '',
         'end_time' => '',
         'location' => '',
+        'visibility' => '',
         'category' => '',
         'created_by' => get_current_user_id(),
         'status' => 'draft',
@@ -344,6 +347,27 @@ function ef_delete_event($event_id)
     global $wpdb;
     $table = ef_events_table();
     return $wpdb->delete($table, ['id' => $event_id]);
+}
+
+function ef_is_public($event_id)
+{
+    $ev=ef_get_event($event_id);
+    if($ev)
+    {
+        if($ef->visibility=='public')
+            return true;
+        if($ef->visibility=='')
+        {
+            if (!empty($ef->category))
+            {
+                $ct=ef_get_category_by_slug($ef->category);
+                if($ct)
+                    if($ct->visibility=='public')
+                        return true;
+            }
+        }
+    }
+    return false;
 }
 
 /**********************************************************/
@@ -407,13 +431,13 @@ function ef_get_categories()
 {
     $table = EF_CATEGORIES_TABLE;
     global $wpdb;
-    return $wpdb->get_results("SELECT * FROM $table ORDER BY name ASC");
+    return ef_recursive_unslash($wpdb->get_results("SELECT * FROM $table ORDER BY name ASC"));
 }
 function ef_get_category_by_slug($slug)
 {
     global $wpdb;
     $table = EF_CATEGORIES_TABLE;
-    return $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE slug = %s", $slug));
+    return ef_recursive_unslash($wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE slug = %s", $slug)));
 }
 
 /**********************************************************/
@@ -474,11 +498,25 @@ function ef_get_user_permissions($user_id)
     return '';
 }
 
+function ef_user_has_permission($perm)
+{
+    $user_id = get_current_user_id();
+    if (!$user_id) $user_id = 0; // guest fallback
+
+    // Fetch permission CSV (implement ef_get_user_permissions to return CSV or empty string)
+    $csv = ef_get_user_permissions($user_id);
+    if (empty($csv)) $csv = implode(',', ef_get_role_definitions()['guest']);
+
+    // Wildcard: all permissions
+    $list = array_map('trim', explode(',', $csv));
+    return in_array($perm, $list) || in_array('*', $list);
+}
+
 function ef_get_all_user_permissions()
 {
     global $wpdb;
     $table = EF_USER_PERMISSIONS_TABLE;
-    return $wpdb->get_results("SELECT * FROM $table");
+    return ef_recursive_unslash($wpdb->get_results("SELECT * FROM $table"));
 }
 
 function ef_reset_user_permissions($user_id)
@@ -565,7 +603,7 @@ function ef_get_location($id)
 {
     global $wpdb;
     $table = EF_LOCATIONS_TABLE;
-    return $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE id = %d", $id));
+    return ef_recursive_unslash($wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE id = %d", $id)));
 }
 
 function ef_get_locations($category = null)
@@ -578,14 +616,14 @@ function ef_get_locations($category = null)
         $where = "WHERE category = %s";
         $params[] = $category;
     }
-    return $wpdb->get_results($wpdb->prepare("SELECT * FROM $table $where ORDER BY name ASC", ...$params));
+    return ef_recursive_unslash($wpdb->get_results($wpdb->prepare("SELECT * FROM $table $where ORDER BY name ASC", ...$params)));
 }
 
 function ef_get_location_by_slug($slug)
 {
     global $wpdb;
     $table = EF_LOCATIONS_TABLE;
-    return $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE slug = %s", $slug));
+    return ef_recursive_unslash($wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE slug = %s", $slug)));
 }
 
 

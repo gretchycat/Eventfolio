@@ -1,0 +1,14 @@
+<div class="eventfolio-event-controls">
+    <div class="eventfolio-category-form">
+        <form method="get" action="" style="display: flex; align-items: center; gap: 10px; margin: 0;">
+            <input type="hidden" name="page" value="eventfolio_events">
+            <input type="hidden" name="date" value="__DATE__">
+            <input type="hidden" name="category" value="__SELECTED_CATEGORY__">
+            <input type="hidden" name="past" value="__PAST_VALUE__">
+            <input type="hidden" name="future" value="__FUTURE_VALUE__">
+            <input type="hidden" name="sort" value="__SORT__">
+            <input type="date" name="date" value="__DATE__" onchange="this.form.submit()">
+            <button name="action" value="reset_date">Reset Date</button>
+        </form>
+    </div>
+</div>

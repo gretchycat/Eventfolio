@@ -1,4 +1,5 @@
 <?php
+if (!defined('ABSPATH')) exit;
 
 function ef_location_viewer_row($row)
 {

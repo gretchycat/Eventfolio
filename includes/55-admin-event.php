@@ -1,4 +1,6 @@
 <?php
+
+if (!defined('ABSPATH')) exit;
 //  55-admin-event.php
 
 if (!function_exists('ef_admin_events_page'))
@@ -8,8 +10,8 @@ if (!function_exists('ef_admin_events_page'))
         // You might want your admin nav here
         if (function_exists('ef_admin_nav')) ef_admin_nav('Events');
         $selected_category = ef_request_var('category', '');
-        $selected_date = ef_request_var('date', date("Y-m-d H:i:s", time()));
-        $mode = ef_request_var('mode', 'list');
+        $selected_date = ef_request_var('date', date_i18n("Y-m-d", current_time('timestamp')));
+        $mode = ef_request_var('mode', 'calendar');
         $sort = ef_request_var('sort', 'a');
         $action = ef_request_var('action', '');
         $past = ef_str_to_bool(ef_request_var('past', 'false'));
@@ -18,24 +20,31 @@ if (!function_exists('ef_admin_events_page'))
         $cat_options=options_list(ef_get_categories(),$selected_category);
         if(!$past and !$future) //we have to show something!
             $future=true;
-        /*echo '<pre></code>';
-        print_r($_GET);
-        print_r($_POST);
-        echo '</code></pre>';/**/
-
         //category chooser
-        if($action=='save')
+        if($action=='reset_date')
+        {
+            $selected_date = date_i18n("Y-m-d", current_time('timestamp'));
+        }
+        elseif($action=='save')
         {
             $event_id = ef_request_var('event_id', '');
             $image_id = ef_request_var('featured_image', '');
             $image_url = wp_get_attachment_url($image_id);
+            $length=intval(ef_request_var('length', '0'));
+            $start= $_POST['start_date'].' '.$_POST['start_time'];
+            $end= $_POST['start_date'].' '.$_POST['end_time'];
+            if(strtotime($end)-strtotime($start)<0)
+            {
+                //$end=date_i18n(strtotime($start)+$length);
+            }
             $data = [
                 'title'           => $_POST['title'],
                 'description'     => $_POST['description'],
                 'category'        => $_POST['category'],
                 'location'        => $_POST['location'],
-                'start_time'      => $_POST['start_date'].' '.$_POST['start_time'],
-                'end_time'        => $_POST['start_date'].' '.$_POST['end_time'],
+                'visibility'      => $_POST['visibility'],
+                'start_time'      => $start,
+                'end_time'        => $end,
                 'recurrence_type' => $_POST['recurrence'],
                 'parent_event_id' => $_POST['parent_id'],
                 'image_id'        => $_POST['featured_image'],
@@ -63,14 +72,21 @@ if (!function_exists('ef_admin_events_page'))
         }
         else
         {
+            $la=''; $ca='';
+            if ($mode=='list')
+                $la='active';
+            else
+                $ca='active';
             echo template_render('event_page_header.html', array(
                 'MODE'             => $mode,
                 'DATE'             => $selected_date,
                 'SORT'             => $sort,
                 'SELECTED_CATEGORY'=> esc_attr($selected_category),
                 'CATEGORY_OPTIONS' => $cat_options,
-                'PAST'       => $past ? 'true' : 'false',
-                'FUTURE'     => $future ? 'true' : 'false',
+                'PAST'             => $past ? 'true' : 'false',
+                'FUTURE'           => $future ? 'true' : 'false',
+                'LIST_ACTIVE'      => $la,
+                'CAL_ACTIVE'       => $ca,
                 ));
             //custom based on display mode
             if ($mode=='list')
@@ -93,6 +109,14 @@ if (!function_exists('ef_admin_events_page'))
             }
             elseif ($mode=='calendar')
             {
+                echo template_render('event_page_calendar_header.html', array(
+                    'MODE'             => $mode,
+                    'DATE'             => $selected_date,
+                    'SORT'             => $sort,
+                    'SELECTED_CATEGORY'=> esc_attr($selected_category),
+                    'PAST_VALUE'       => $past ? 'true' : 'false',
+                    'FUTURE_VALUE'     => $future ? 'true' : 'false',
+                    ));
             }
 
             $add_event_url = add_query_arg([
@@ -111,39 +135,36 @@ if (!function_exists('ef_admin_events_page'))
                 'TYPE'     => 'Event',
             ]);
             if ($mode =='list')
-            {
-                //show list interface
-                ef_admin_events_list($selected_category, $past, $future, $sort, $selected_date);
+            {   //show list interface
+                ef_events_list($selected_category, $selected_date);
             }
             elseif ($mode=='calendar')
-            {//show calendar interface
-                ef_admin_events_calendar($selected_category, $selected_date);
+            {   //show calendar interface
+                ef_events_calendar($selected_category, $selected_date);
             }
         }
     }
 }
 
-function ef_admin_events_links($row, $category, $past, $future, $sort, $date, $selected_date='')
+function ef_admin_events_links($row, $category, $date, $selected_date='')
 {
+    $sort = ef_request_var('sort', 'a');
+    $past = ef_str_to_bool(ef_request_var('past', 'false'));
+    $future =  ef_str_to_bool(ef_request_var('future', 'false'));
+
     $edit_series='';
     $delete_url='';
     $new_instance='';
     $edit_url = '';
-    $mode = ef_request_var('mode', 'list');
+    $mode = ef_request_var('mode', 'calendar');
     if(!intval($row->id))
         $row->id='new';
     $view_url = add_query_arg([
-        'page'     => 'eventfolio_events',
         'event_id' => $row->id,
-        'action'   => 'view',
-        'click'    => 'true',
-        'category' => $category ?? '',
+        'eventfolio_category_slug' => $category ?? '',
+        'eventfolio_view' => 'event',
         'date'     => $date ?? '',
-        'mode'     => $mode,
-        'sort'     => $sort,
-        'past'     => $past ? 'true' : 'false',
-        'future'   => $future ? 'true' : 'false',
-        ], home_url('/events/'));
+        ], home_url('/'));
  
     $edit_url = add_query_arg([
         'page'     => 'eventfolio_events',
@@ -185,15 +206,15 @@ function ef_admin_events_links($row, $category, $past, $future, $sort, $date, $s
                 ], admin_url('admin.php'));
         if($row->recurrence_type)
         {
-            $when=$selected_date ?? date("Y-m-d", time());
+            $when=$selected_date ?? date_i18n("Y-m-d", current_time('timestamp'));
             $next = ef_get_next_event_times(
                 $when,
                 $row->start_time,
                 $row->end_time,
                 $row->recurrence_type);
-            $start_date = date('Y-m-d', strtotime($next['start']));
-            $start_time = date('H:i', strtotime($next['start']));
-            $end_time   = date('H:i', strtotime($next['end']));
+            $start_date = date_i18n('Y-m-d', strtotime($next['start']));
+            $start_time = date_i18n('H:i', strtotime($next['start']));
+            $end_time   = date_i18n('H:i', strtotime($next['end']));
             $new_instance = add_query_arg([
                 'page'       => 'eventfolio_events',
                 'event_id'   => 'new',
@@ -226,8 +247,13 @@ function ef_admin_events_links($row, $category, $past, $future, $sort, $date, $s
         );
 }
 
-function ef_admin_events_list($category, $past, $future, $sort, $date)
+function ef_events_list($category, $date)
 {
+    $sort = ef_request_var('sort', 'a');
+    $action = ef_request_var('action', '');
+    $past = ef_str_to_bool(ef_request_var('past', 'false'));
+    $future =  ef_str_to_bool(ef_request_var('future', 'false'));
+
     echo '<div class="eventfolio-list eventfolio-events-list">';
     // Header row
     echo template_render('event_row.html', array(
@@ -246,9 +272,22 @@ function ef_admin_events_list($category, $past, $future, $sort, $date)
     if (!empty($events))
     {
         foreach ($events as $row)
-        {
-            $links=ef_admin_events_links($row, $category, $past, $future, $sort, $date);
-            ef_event_viewer_row($row, $links['edit'], $links['delete'], $links['edit_series'], $links['new_instance']);
+        { 
+            if(ef_user_has_permission('view_event'))    //is validated?
+            {
+                $links=ef_admin_events_links($row, $category, $date);
+                if(ef_user_has_permission('edit_event'))    //is organizer?
+                {
+                    ef_event_viewer_row($row, $links['edit'], $links['delete'], $links['edit_series'], $links['new_instance']);
+                }
+                else
+                {
+                    ef_event_viewer_row($row, $links['view'], '', '', '');
+                }
+            }
+            else
+                ef_event_viewer_row($row, '', '', '', '');
+
         }
     }
     else
@@ -258,12 +297,12 @@ function ef_admin_events_list($category, $past, $future, $sort, $date)
     echo '</div>';
 }
 
-function ef_admin_events_calendar($category, $date)
+function ef_events_calendar($category, $date)
 {
-    $now=date("Y-m-d H:i:s", time());
-    $now_date=date("Y-m-d", time());
-
-    $date_only = date('Y-m-d', strtotime($date));
+    $now=date_i18n("Y-m-d H:i:s", current_time('timestamp'));
+    $now_date=date_i18n("Y-m-d", current_time('timestamp'));
+    $mode='calendar';
+    $date_only = date_i18n('Y-m-d', strtotime($date));
 
     $dow = [];
     for ($i = 0; $i < 7; $i++) {
@@ -313,21 +352,16 @@ function ef_admin_events_calendar($category, $date)
                 $event = template_render('calendar_month_cell_event.html', array(
                     'ICON'    =>$ev->image_url,
                     'TITLE'   =>$ev->title,
-                    'START'   => date("H:i", strtotime($ev->start_time)),
-                    'END'     => date("H:i", strtotime($ev->end_time)),
+                    'START'   => date_i18n("H:i", strtotime($ev->start_time)),
+                    'END'     => date_i18n("H:i", strtotime($ev->end_time)),
                     'ACTIONS' =>'',
                     ));
-                if(true)    //is validated?
+                if(ef_user_has_permission('view_event'))    //is validated?
                 {
-                    $args = array_merge($_GET, $_POST);
-                    $links=ef_admin_events_links($ev, $category, $past, $future, $sort, $date_only, $dt);
-                    if(true)    //is organizer?
+                    $links=ef_admin_events_links($ev, $category, $date_only, $dt);
+                    if(ef_user_has_permission('edit_event'))    //is organizer?
                     {
-                        $url = '';
-                        if($links['new_instance'])
-                            $url=$links['new_instance'];
-                        else
-                            $url=$links['edit'];
+                        $url = empty($links['new_instance']) ? $links['edit'] : $links['new_instance'];
                     }
                     else
                     {

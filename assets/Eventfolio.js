@@ -29,11 +29,11 @@ jQuery(document).ready(function($){
 
 document.addEventListener("DOMContentLoaded", function() {
     // Remove this line after testing
-    const btn = document.createElement("button");
+/*    const btn = document.createElement("button");
     btn.innerText = "Debug";
     btn.style.position = "fixed";
     btn.style.bottom = "24px";
     btn.style.right = "24px";
     btn.style.zIndex = "99999";
-    document.body.appendChild(btn);
+    document.body.appendChild(btn);*/
 });

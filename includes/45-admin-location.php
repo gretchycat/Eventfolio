@@ -1,4 +1,5 @@
 <?php
+if (!defined('ABSPATH')) exit;
 //  45-admin-location.php
 
 if (!function_exists('ef_admin_locations_page'))

@@ -16,6 +16,7 @@ if (!defined('EF_PLUGIN_PATH'))
 {
     define('EF_PLUGIN_PATH', plugin_dir_path(__FILE__));
 }
+
 if (!defined('EF_PLUGIN_URL'))
 {
     define('EF_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -39,6 +40,7 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links)
     return $links;
 });
 
+//upon activation, create databases and check user permissions
 register_activation_hook(__FILE__, function()
 {
     ef_install_tables();
@@ -92,37 +94,9 @@ add_action('admin_menu', function()
     );
 });
 
-function ef_enqueue_admin_css()
-{
-    $css_url = plugins_url('assets/Eventfolio.css', __FILE__);
-    wp_enqueue_style('eventfolio-admin-css', $css_url, [], filemtime(__DIR__ . '/assets/Eventfolio.css'));
-}
-
+//includes CSS and JavaScript
 add_action('admin_enqueue_scripts', 'ef_enqueue_admin_css');
+//add_action('admin_enqueue_scripts', 'ef_enqueue_admin_debug_js'); //DEBUG
+add_action('admin_enqueue_scripts', 'ef_enqueue_admin_media_js');
 
-add_action('admin_enqueue_scripts', function() //DEBUG
-{ //DEBUG
-    wp_enqueue_script( //DEBUG
-        'eventfolio-debug', //DEBUG
-        plugin_dir_url(__FILE__) . 'assets/debug.js', //DEBUG
-        array(), //DEBUG
-        filemtime(plugin_dir_path(__FILE__) . 'assets/debug.js'), //DEBUG
-        true//DEBUG
-    ); //DEBUG
-}); //DEBUG
-
-add_action('admin_enqueue_scripts', function($hook)
-{
-    if(isset($_GET['page']) && strpos($_GET['page'], 'eventfolio') !== false)
-    {
-        wp_enqueue_media();
-        wp_enqueue_script(
-            'eventfolio-media',
-            plugin_dir_url(__FILE__) . 'assets/Eventfolio.js',
-            ['jquery'],
-            filemtime(plugin_dir_path(__FILE__) . 'assets/Eventfolio.js'), //DEBUG
-            '1.0',
-            true
-        );
-    }
-});
+add_action('wp_enqueue_scripts', 'ef_enqueue_public_css_js');
