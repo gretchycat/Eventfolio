@@ -59,12 +59,19 @@ register_activation_hook(__FILE__, function()
 
 add_action('admin_menu', function()
 {
-    add_menu_page('Eventfolio', 'Eventfolio', 'manage_options', 'eventfolio', 'ef_admin_info_page', 'dashicons-calendar-alt');
+    add_menu_page(
+        'Eventfolio', 
+        'Eventfolio', 
+        'edit_posts', 
+        'eventfolio', 
+        'ef_admin_info_page', 
+        'dashicons-calendar-alt'
+    );
     add_submenu_page(
         'eventfolio',
         'Events',
         'Events',
-        'manage_options',
+        'edit_posts',
         'eventfolio_events',
         'ef_admin_events_page',
     );
@@ -80,7 +87,7 @@ add_action('admin_menu', function()
         'eventfolio',
         'Locations',
         'Locations',
-        'manage_options',
+        'edit_posts',
         'eventfolio_locations',
         'ef_admin_locations_page'
     );
