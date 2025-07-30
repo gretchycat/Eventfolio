@@ -347,13 +347,13 @@
     width:14%;
     border:1px solid #777;
     overflow:hidden;
-
+    min-height: 128px;
 }
 
 .calendar-past {
     background-image: url('/wp-content/plugins/Eventfolio/assets/x.svg');
     background-repeat: no-repeat;
-    background-size: 100% 100%;
+    background-size: 100% 100% !important;
 }
 
 .calendar-today {

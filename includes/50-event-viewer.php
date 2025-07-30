@@ -46,14 +46,16 @@ if (!function_exists('ef_event_viewer_row'))
         }
         else
             $location='private';
-        $start_date = date('Y-m-d', strtotime($row->start_time));
-        $start_time = date('H:i', strtotime($row->start_time));
-        $end_time   = date('H:i', strtotime($row->end_time));
+        $date_format = get_option('date_format');
+        $time_format = get_option('time_format');
+        $start_date = date_i18n($date_format, strtotime($row->start_time));
+        $start_time = date_i18n($time_format, strtotime($row->start_time));
+        $end_time   = date_i18n($time_format, strtotime($row->end_time));
         echo template_render('event_row.html', array(
             'ICON' => $icon,
             'TITLE' => esc_html($row->title),
             'LOCATION' => esc_html($location),
-            'DATE' => ef_recurrence_human($start_date, $row->recurrence_type),
+            'DATE' => ef_recurrence_human($start_date,$row->recurrence_type),
             'START' => esc_html($start_time),
             'END' => esc_html($end_time),
             'RECURRING' => esc_html($row->recurrence_type),

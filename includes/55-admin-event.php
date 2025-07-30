@@ -37,12 +37,14 @@ if (!function_exists('ef_admin_events_page'))
             {
                 //$end=date_i18n(strtotime($start)+$length);
             }
+            $cat=ef_get_category_by_slug($_POST['category']);
+            $visibility=$cat->visibility;
             $data = [
                 'title'           => $_POST['title'],
                 'description'     => $_POST['description'],
                 'category'        => $_POST['category'],
                 'location'        => $_POST['location'],
-                'visibility'      => $_POST['visibility'],
+                'visibility'      => $_POST['visibility']??$visibility,
                 'start_time'      => $start,
                 'end_time'        => $end,
                 'recurrence_type' => $_POST['recurrence'],
@@ -348,12 +350,16 @@ function ef_events_calendar($category, $date)
             $events='';
             $evs=ef_get_events_on($category, $dt);
             foreach($evs as $ev)
-            {
+            {    
+                $date_format = get_option('date_format');
+
+                $time_format = get_option('time_format');
+
                 $event = template_render('calendar_month_cell_event.html', array(
                     'ICON'    =>$ev->image_url,
                     'TITLE'   =>$ev->title,
-                    'START'   => date_i18n("H:i", strtotime($ev->start_time)),
-                    'END'     => date_i18n("H:i", strtotime($ev->end_time)),
+                    'START'   => date_i18n($time_format, strtotime($ev->start_time)),
+                    'END'     => date_i18n($time_format, strtotime($ev->end_time)),
                     'ACTIONS' =>'',
                     ));
                 if(ef_user_has_permission('view_event'))    //is validated?

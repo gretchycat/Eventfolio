@@ -37,6 +37,7 @@ function ef_event_editor()
         else
             $tm=strtotime($date);
         $row=(object)array(
+            'id'=>'new',
             'title'=>'',
             'location'=>'',
             'start_time'=>date_i18n("Y-m-d H:i:s",$tm),
@@ -45,6 +46,7 @@ function ef_event_editor()
             'recurrence_type' => '',
             'category'=>$selected_category,
             'parent_event_id'=>$parent_id,
+            'image_id'=>'',
             );
     }
     $cat_options=options_list(ef_get_categories(),$selected_category);
@@ -100,7 +102,7 @@ function ef_event_editor()
         $series_link='New Instance';
     if(intval($parent_id))
         $series_link='Edit Series';
-    $links=ef_admin_events_links($row, $category, $date);
+    $links=ef_admin_events_links($row, $selected_category, $date);
     $dl='';
     $sl='';
     $nl='';
@@ -110,6 +112,8 @@ function ef_event_editor()
         $sl = '<a href="'.$links['edit_series'].'">Edit&nbsp;Series</a>';
      if($links['new_instance'])
         $nl = '<a href="'.$links['new_instance'].'">New&nbspInstance</a>';
+    $date_format = get_option('date_format');
+    $time_format = get_option('time_format');
 
     echo template_render('event_edit_page.html', array(
         'MODE'               => $mode,

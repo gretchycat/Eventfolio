@@ -50,6 +50,14 @@ function ef_enqueue_admin_media_js($hook)
             filemtime(EF_PLUGIN_PATH . 'assets/Eventfolio.js'),
             true
         );
+        wp_enqueue_script(
+            'eventfolio-media',
+            EF_PLUGIN_URL . 'assets/media-selector.js',
+            ['jquery'],
+            filemtime(EF_PLUGIN_PATH . 'assets/media-selector.js'),
+            true
+        );
+
     }
 }
 

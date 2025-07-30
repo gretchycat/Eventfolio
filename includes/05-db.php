@@ -35,7 +35,7 @@ function ef_create_events_table()
         image_id bigint(28) unsigned,
         teaser text,
         parent_event_id BIGINT(20) UNSIGNED DEFAULT NULL,
-        visibility varchar(16) NOT NULL DEFAULT 'public',
+        visibility varchar(16) DEFAULT 'public',
         location_id BIGINT(20) UNSIGNED DEFAULT NULL,
         featured_image_id BIGINT(20) UNSIGNED DEFAULT NULL,
         created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -354,9 +354,9 @@ function ef_is_public($event_id)
     $ev=ef_get_event($event_id);
     if($ev)
     {
-        if($ef->visibility=='public')
+        if($ev->visibility=='public')
             return true;
-        if($ef->visibility=='')
+        if($ev->visibility=='')
         {
             if (!empty($ef->category))
             {

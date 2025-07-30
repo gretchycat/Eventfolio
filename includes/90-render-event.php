@@ -14,18 +14,21 @@ function ef_public_event_view($slug, $id)
         return;
     $image_id = $row->image_id;
     $category=ef_get_category_by_slug($row->category)->name;
-    $public=ef_is_public($row->id);;
+    $public=ef_is_public($row->id);
     $end= strtotime($row->end_time);
     $l=strtotime($row->end_time)-strtotime($row->start_time);
     $image_url = wp_get_attachment_url($image_id);
     $rec_options=options_list($recur,$recurrence);
-    $start_date=date_i18n('Y-m-d', strtotime($row->start_time));
+    $date_format = get_option('date_format');
+    $time_format = get_option('time_format');
+
+    $start_date=date_i18n($date_format, strtotime($row->start_time));
     if(!empty($row->recurrence_type))
     {
         $start_date='Every '.ef_recurrence_human( $start_date, $row->recurrence_type);
     }
-    $start_time = date_i18n('H:i', strtotime($row->start_time));
-    $end_time   = date_i18n('H:i', $end);
+    $start_time = date_i18n($time_format, strtotime($row->start_time));
+    $end_time   = date_i18n($time_format, $end);
     $image_id= $row->image_id;
     $image_url = wp_get_attachment_url($image_id);
     $address='';
